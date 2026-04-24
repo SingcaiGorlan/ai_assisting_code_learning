@@ -22,9 +22,7 @@ setup:
 	go install github.com/swaggo/swag/cmd/swag@latest
 	@echo "创建配置文件..."
 	cp .env.example .env.local
-	cp configs/config.yaml configs/config.local.yaml
-	@echo "安装前端依赖..."
-	cd web && npm install
+	cp configs/config.yaml configs/config.local.yaml || echo "配置文件已存在"
 	@echo "✅ 初始化完成！请编辑 .env.local 和 config.local.yaml"
 
 # 开发服务器
@@ -58,12 +56,12 @@ clean:
 # 启动Docker服务
 docker-up:
 	@echo "启动Docker服务..."
-	docker-compose -f deployments/docker-compose.dev.yml up -d
+	docker-compose -f docker-compose.dev.yml up -d
 
 # 停止Docker服务
 docker-down:
 	@echo "停止Docker服务..."
-	docker-compose -f deployments/docker-compose.dev.yml down
+	docker-compose -f docker-compose.dev.yml down
 
 # 数据库迁移
 migrate:
