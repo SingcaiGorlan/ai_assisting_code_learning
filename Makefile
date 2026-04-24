@@ -50,8 +50,9 @@ lint:
 # 清理
 clean:
 	@echo "清理构建文件..."
-	rm -rf bin/ dist/ coverage.out
-	rm -rf web/dist
+	if exist bin rmdir /s /q bin
+	if exist tmp rmdir /s /q tmp
+	if exist coverage.out del /q coverage.out
 
 # 启动Docker服务
 docker-up:

@@ -3,8 +3,8 @@ package middleware
 import (
 	"time"
 
+	"github.com/SingcaiGorlan/ai_assisting_code_learningai-learning-platform/internal/pkg/logger"
 	"github.com/gin-gonic/gin"
-	"github.com/your-org/ai-learning-platform/internal/pkg/logger"
 	"go.uber.org/zap"
 )
 
@@ -103,7 +103,7 @@ func randomString(length int) string {
 	const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 	b := make([]byte, length)
 	for i := range b {
-		b[i] = charset[time.Now().Nanosecond()%int64(len(charset))]
+		b[i] = charset[time.Now().Nanosecond()%len(charset)]
 	}
 	return string(b)
 }

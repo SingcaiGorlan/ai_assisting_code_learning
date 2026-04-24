@@ -1,9 +1,9 @@
 package handler
 
 import (
+	"github.com/SingcaiGorlan/ai_assisting_code_learningai-learning-platform/internal/app/handler/api"
+	"github.com/SingcaiGorlan/ai_assisting_code_learningai-learning-platform/internal/pkg/config"
 	"github.com/gin-gonic/gin"
-	"github.com/your-org/ai-learning-platform/internal/app/handler/api"
-	"github.com/your-org/ai-learning-platform/internal/pkg/config"
 	"gorm.io/gorm"
 )
 
@@ -11,7 +11,7 @@ func RegisterRoutes(router *gin.Engine, db *gorm.DB, redisClient interface{}, cf
 	// 健康检查
 	router.GET("/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{
-			"status": "ok",
+			"status":  "ok",
 			"service": "ai-learning-platform",
 		})
 	})
@@ -41,7 +41,7 @@ func RegisterRoutes(router *gin.Engine, db *gorm.DB, redisClient interface{}, cf
 		ai.Use(api.AuthMiddleware())
 		{
 			ai.POST("/chat", api.AIChat)
-			ai.POST("/code-assist", ai.CodeAssist)
+			ai.POST("/code-assist", api.CodeAssist)
 		}
 	}
 }

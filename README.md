@@ -37,13 +37,20 @@
    ```
 
 2. **初始化开发环境**
+
+   - **Windows（PowerShell，无需 make）**
+   ```powershell
+   powershell -ExecutionPolicy Bypass -File scripts/setup.ps1
+   ```
+
+   - **macOS/Linux（已安装 make）**
    ```bash
    make setup
    ```
 
 3. **启动依赖服务**
    ```bash
-   make docker-up
+   docker-compose -f docker-compose.dev.yml up -d
    ```
 
 4. **配置环境变量**
@@ -53,13 +60,41 @@
    ```
 
 5. **启动开发服务器**
+
+   - **Windows（PowerShell）**
+   ```powershell
+   powershell -ExecutionPolicy Bypass -File scripts/dev.ps1
+   ```
+
+   - **通用方式**
    ```bash
-   make dev
+   go run ./cmd/server
    ```
 
 服务将在 `http://localhost:8080` 启动
 
 ## 📖 可用命令
+
+### Windows（PowerShell，无 make）
+
+```powershell
+# 初始化开发环境
+powershell -ExecutionPolicy Bypass -File scripts/setup.ps1
+
+# 编译项目
+powershell -ExecutionPolicy Bypass -File scripts/build.ps1
+
+# 启动开发服务
+powershell -ExecutionPolicy Bypass -File scripts/dev.ps1
+
+# 启动 Docker 服务
+docker-compose -f docker-compose.dev.yml up -d
+
+# 停止 Docker 服务
+docker-compose -f docker-compose.dev.yml down
+```
+
+### macOS/Linux（make）
 
 ```bash
 # 初始化开发环境

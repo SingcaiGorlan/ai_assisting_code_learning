@@ -300,7 +300,7 @@ git clone git@github.com:your-org/ai-learning-platform.git
 cd ai-learning-platform
 
 # 或使用 HTTPS
-git clone https://github.com/your-org/ai-learning-platform.git
+git clone https://github.com/SingcaiGorlan/ai_assisting_code_learningai-learning-platform.git
 cd ai-learning-platform
 ```
 
@@ -1101,7 +1101,7 @@ Tab               # 自动补全
 
 - 项目负责人：[姓名] ([email])
 - 技术支持：[姓名] ([email])
-- Issues: https://github.com/your-org/ai-learning-platform/issues
+- Issues: https://github.com/SingcaiGorlan/ai_assisting_code_learningai-learning-platform/issues
 
 ---
 

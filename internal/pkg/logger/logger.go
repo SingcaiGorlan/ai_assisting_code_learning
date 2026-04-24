@@ -3,7 +3,7 @@ package logger
 import (
 	"os"
 
-	"github.com/your-org/ai-learning-platform/internal/pkg/config"
+	"github.com/SingcaiGorlan/ai_assisting_code_learningai-learning-platform/internal/pkg/config"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"gorm.io/gorm/logger"
