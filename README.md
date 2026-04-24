@@ -48,9 +48,9 @@
    make setup
    ```
 
-3. **启动依赖服务**
+3. **启动依赖服务（Podman）**
    ```bash
-   docker-compose -f docker-compose.dev.yml up -d
+   podman compose -f docker-compose.dev.yml up -d
    ```
 
 4. **配置环境变量**
@@ -115,10 +115,10 @@ make lint
 # 清理构建文件
 make clean
 
-# 启动 Docker 服务
+# 启动 Podman 服务
 make docker-up
 
-# 停止 Docker 服务
+# 停止 Podman 服务
 make docker-down
 
 # 运行数据库迁移

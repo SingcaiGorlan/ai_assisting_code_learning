@@ -56,13 +56,13 @@ clean:
 
 # 启动Docker服务
 docker-up:
-	@echo "启动Docker服务..."
-	docker-compose -f docker-compose.dev.yml up -d
+	@echo "启动 Podman 服务..."
+	podman compose -f docker-compose.dev.yml up -d
 
-# 停止Docker服务
+# 停止Podman服务
 docker-down:
-	@echo "停止Docker服务..."
-	docker-compose -f docker-compose.dev.yml down
+	@echo "停止 Podman 服务..."
+	podman compose -f docker-compose.dev.yml down
 
 # 数据库迁移
 migrate:
