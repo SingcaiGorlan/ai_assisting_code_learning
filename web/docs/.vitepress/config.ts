@@ -4,6 +4,7 @@ export default defineConfig({
   title: 'AI Learning Platform',
   description: 'Pseudo-static docs and web interface for the AI Learning Platform',
   lang: 'en-US',
+  base: '/ai_assisting_code_learning/',
   lastUpdated: true,
   themeConfig: {
     nav: [

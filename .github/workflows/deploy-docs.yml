@@ -1,0 +1,46 @@
+name: Deploy VitePress docs to GitHub Pages
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "web/**"
+      - "Dockerfile"
+      - "go.mod"
+      - "go.sum"
+      - "README.md"
+      - ".github/workflows/deploy-docs.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'npm'
+          cache-dependency-path: web/package-lock.json
+
+      - name: Install deps
+        working-directory: web
+        run: npm ci
+
+      - name: Build VitePress
+        working-directory: web
+        run: npm run docs:build
+
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: web/docs/.vitepress/dist
+          publish_branch: gh-pages
+          force_orphan: true
