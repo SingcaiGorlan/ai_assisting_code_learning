@@ -59,7 +59,7 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
-// 如果需要代理
+// If proxy is needed
 // replace github.com/SingcaiGorlan/ai_assisting_code_learningai-learning-platform => ./
 
 replace github.com/cosmtrek/air => github.com/air-verse/air v1.65.1

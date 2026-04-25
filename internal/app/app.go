@@ -20,26 +20,26 @@ type Application struct {
 	Router *gin.Engine
 	DB     *gorm.DB
 	Redis  *redis.Client
-	// 其他依赖...
+	// Other dependencies...
 }
 
 func InitApp(cfg *config.Config) (*Application, func(), error) {
-	// 设置Gin模式
+	// Set Gin mode
 	gin.SetMode(cfg.Server.Mode)
 
-	// 初始化数据库
+	// Initialize database
 	db, err := initDatabase(cfg.Database)
 	if err != nil {
-		return nil, nil, fmt.Errorf("初始化数据库失败: %w", err)
+		return nil, nil, fmt.Errorf("failed to initialize database: %w", err)
 	}
 
-	// 初始化Redis
+	// Initialize Redis
 	redisClient := initRedis(cfg.Redis)
 
-	// 创建路由器
+	// Create router
 	router := gin.New()
 
-	// 注册中间件
+	// Register middleware
 	router.Use(
 		gin.Recovery(),
 		middleware.Logger(),
@@ -47,7 +47,7 @@ func InitApp(cfg *config.Config) (*Application, func(), error) {
 		middleware.RequestID(),
 	)
 
-	// 注册路由
+	// Register routes
 	handler.RegisterRoutes(router, db, redisClient, cfg)
 
 	app := &Application{
@@ -57,9 +57,9 @@ func InitApp(cfg *config.Config) (*Application, func(), error) {
 		Redis:  redisClient,
 	}
 
-	// 清理函数
+	// Cleanup function
 	cleanup := func() {
-		logger.Info("清理资源...")
+		logger.Info("Cleaning up resources...")
 
 		sqlDB, err := db.DB()
 		if err == nil {
@@ -85,7 +85,7 @@ func initDatabase(cfg config.DatabaseConfig) (*gorm.DB, error) {
 		return nil, err
 	}
 
-	// 测试连接
+	// Test connection
 	sqlDB, err := db.DB()
 	if err != nil {
 		return nil, err
@@ -95,7 +95,7 @@ func initDatabase(cfg config.DatabaseConfig) (*gorm.DB, error) {
 		return nil, err
 	}
 
-	logger.Info("数据库连接成功")
+	logger.Info("Database connection successful")
 	return db, nil
 }
 
@@ -106,13 +106,13 @@ func initRedis(cfg config.RedisConfig) *redis.Client {
 		DB:       cfg.DB,
 	})
 
-	// 测试连接
+	// Test connection
 	ctx := context.Background()
 	if err := client.Ping(ctx).Err(); err != nil {
-		log.Printf("Redis连接失败: %v", err)
+		log.Printf("Redis connection failed: %v", err)
 		return nil
 	}
 
-	logger.Info("Redis连接成功")
+	logger.Info("Redis connection successful")
 	return client
 }

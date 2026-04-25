@@ -51,7 +51,7 @@ services:
       timeout: 20s
       retries: 3
 
-  # 可选：其他服务
+  # Optional: other services
   # elasticsearch:
   #   image: elasticsearch:8.11.0
   #   container_name: alp-es
@@ -63,7 +63,7 @@ services:
   #   volumes:
   #     - es_data:/usr/share/elasticsearch/data
 
-  # 应用服务（开发时本地运行）
+  # Application service (run locally during development)
   # backend:
   #   build:
   #     context: .

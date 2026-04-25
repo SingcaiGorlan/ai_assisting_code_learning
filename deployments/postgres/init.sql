@@ -1,7 +1,7 @@
--- 创建扩展
+-- Create extension
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
--- 用户表
+-- Users table
 CREATE TABLE IF NOT EXISTS users (
     id BIGSERIAL PRIMARY KEY,
     uuid UUID DEFAULT uuid_generate_v4() UNIQUE,
@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 CREATE INDEX IF NOT EXISTS idx_users_username ON users(username);
 
--- 用户档案表
+-- User profiles table
 CREATE TABLE IF NOT EXISTS user_profiles (
     id BIGSERIAL PRIMARY KEY,
     user_id BIGINT REFERENCES users(id) ON DELETE CASCADE,
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS user_profiles (
 
 CREATE UNIQUE INDEX IF NOT EXISTS idx_user_profiles_user_id ON user_profiles(user_id);
 
--- 学科表
+-- Subjects table
 CREATE TABLE IF NOT EXISTS subjects (
     id BIGSERIAL PRIMARY KEY,
     name VARCHAR(50) UNIQUE NOT NULL,
@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS subjects (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
--- 知识点表
+-- Knowledge points table
 CREATE TABLE IF NOT EXISTS knowledge_points (
     id BIGSERIAL PRIMARY KEY,
     subject_id BIGINT REFERENCES subjects(id) ON DELETE CASCADE,
@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS knowledge_points (
 CREATE INDEX IF NOT EXISTS idx_knowledge_points_subject_id ON knowledge_points(subject_id);
 CREATE INDEX IF NOT EXISTS idx_knowledge_points_tags ON knowledge_points USING gin(tags);
 
--- 对话记录表
+-- Chat records table
 CREATE TABLE IF NOT EXISTS chat_records (
     id BIGSERIAL PRIMARY KEY,
     session_id VARCHAR(100) NOT NULL,
@@ -87,7 +87,7 @@ CREATE INDEX IF NOT EXISTS idx_chat_records_session_id ON chat_records(session_i
 CREATE INDEX IF NOT EXISTS idx_chat_records_user_id ON chat_records(user_id);
 CREATE INDEX IF NOT EXISTS idx_chat_records_created_at ON chat_records(created_at);
 
--- 学习进度表
+-- Learning progress table
 CREATE TABLE IF NOT EXISTS learning_progress (
     id BIGSERIAL PRIMARY KEY,
     user_id BIGINT REFERENCES users(id) ON DELETE CASCADE,
@@ -105,13 +105,13 @@ CREATE TABLE IF NOT EXISTS learning_progress (
 CREATE INDEX IF NOT EXISTS idx_learning_progress_user_subject ON learning_progress(user_id, subject_id);
 CREATE INDEX IF NOT EXISTS idx_learning_progress_next_review ON learning_progress(next_review_at);
 
--- 习题表
+-- Exercises table
 CREATE TABLE IF NOT EXISTS exercises (
     id BIGSERIAL PRIMARY KEY,
     subject_id BIGINT REFERENCES subjects(id) ON DELETE CASCADE,
     knowledge_point_ids BIGINT[] DEFAULT '{}',
     question TEXT NOT NULL,
-    options JSONB, -- 选择题选项
+    options JSONB, -- multiple choice options
     answer TEXT,
     explanation TEXT,
     difficulty INTEGER DEFAULT 1, -- 1-5
@@ -125,15 +125,15 @@ CREATE TABLE IF NOT EXISTS exercises (
 CREATE INDEX IF NOT EXISTS idx_exercises_subject_id ON exercises(subject_id);
 CREATE INDEX IF NOT EXISTS idx_exercises_knowledge_point_ids ON exercises USING gin(knowledge_point_ids);
 
--- 初始化数据
+-- Initial data
 INSERT INTO subjects (name, code, description, icon, sort_order) VALUES
-('数学', 'math', '数学学科', 'calculator', 1),
-('物理', 'physics', '物理学科', 'atom', 2),
-('化学', 'chemistry', '化学学科', 'flask', 3),
-('编程', 'programming', '编程学习', 'code', 4),
-('英语', 'english', '英语学习', 'language', 5)
+('Mathematics', 'math', 'Mathematics subject', 'calculator', 1),
+('Physics', 'physics', 'Physics subject', 'atom', 2),
+('Chemistry', 'chemistry', 'Chemistry subject', 'flask', 3),
+('Programming', 'programming', 'Programming learning', 'code', 4),
+('English', 'english', 'English learning', 'language', 5)
 ON CONFLICT (code) DO NOTHING;
 
--- 创建索引
+-- Create indexes
 CREATE INDEX IF NOT EXISTS idx_users_deleted_at ON users(deleted_at);
 CREATE INDEX IF NOT EXISTS idx_chat_records_user_created ON chat_records(user_id, created_at DESC);

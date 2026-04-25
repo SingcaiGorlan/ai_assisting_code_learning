@@ -8,7 +8,7 @@ import (
 	"go.uber.org/zap"
 )
 
-// Logger 日志中间件
+// Logger middleware for logging HTTP requests
 func Logger() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		start := time.Now()
@@ -37,7 +37,7 @@ func Logger() gin.HandlerFunc {
 	}
 }
 
-// CORS 跨域中间件
+// CORS middleware for cross-origin requests
 func CORS() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
@@ -54,7 +54,7 @@ func CORS() gin.HandlerFunc {
 	}
 }
 
-// RequestID 请求ID中间件
+// RequestID middleware for adding unique request IDs
 func RequestID() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		requestID := c.GetHeader("X-Request-ID")
@@ -67,7 +67,7 @@ func RequestID() gin.HandlerFunc {
 	}
 }
 
-// Recovery 恢复中间件
+// Recovery middleware for panic recovery
 func Recovery() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		defer func() {
@@ -86,16 +86,16 @@ func Recovery() gin.HandlerFunc {
 	}
 }
 
-// RateLimiter 限流中间件（简化版）
+// RateLimiter middleware for rate limiting (simplified version)
 func RateLimiter() gin.HandlerFunc {
-	// TODO: 实现基于 Redis 的限流逻辑
+	// TODO: Implement Redis-based rate limiting
 	return func(c *gin.Context) {
 		c.Next()
 	}
 }
 
 func generateRequestID() string {
-	// 简单生成请求ID，生产环境可以使用更复杂的算法
+	// Simple request ID generation, use more complex algorithm in production
 	return time.Now().Format("20060102150405") + "-" + randomString(6)
 }
 

@@ -18,9 +18,9 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	// TODO: 实现用户注册逻辑
+	// TODO: Implement user registration logic
 	c.JSON(http.StatusOK, gin.H{
-		"message": "注册成功",
+		"message": "Registration successful",
 		"user": gin.H{
 			"username": req.Username,
 			"email":    req.Email,
@@ -39,15 +39,15 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	// TODO: 实现登录逻辑，生成 JWT token
+	// TODO: Implement login logic and generate JWT token
 	c.JSON(http.StatusOK, gin.H{
-		"message": "登录成功",
+		"message": "Login successful",
 		"token":   "example-jwt-token",
 	})
 }
 
 func GetProfile(c *gin.Context) {
-	// 从上下文中获取用户信息
+	// Get user information from context
 	userID := c.GetString("user_id")
 
 	c.JSON(http.StatusOK, gin.H{
@@ -62,14 +62,14 @@ func GetLessons(c *gin.Context) {
 		"lessons": []gin.H{
 			{
 				"id":          1,
-				"title":       "Go 基础语法",
-				"description": "学习 Go 语言的基本语法",
+				"title":       "Go Basic Syntax",
+				"description": "Learn basic Go language syntax",
 				"level":       "beginner",
 			},
 			{
 				"id":          2,
-				"title":       "Gin 框架入门",
-				"description": "学习使用 Gin 框架构建 Web 应用",
+				"title":       "Gin Framework Introduction",
+				"description": "Learn to build web applications using Gin framework",
 				"level":       "intermediate",
 			},
 		},
@@ -81,9 +81,9 @@ func GetLesson(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"id":          lessonID,
-		"title":       "Go 基础语法",
-		"content":     "课程内容...",
-		"exercises":   []string{"练习1", "练习2"},
+		"title":       "Go Basic Syntax",
+		"content":     "Course content...",
+		"exercises":   []string{"Exercise 1", "Exercise 2"},
 	})
 }
 
@@ -92,7 +92,7 @@ func CompleteLesson(c *gin.Context) {
 	userID := c.GetString("user_id")
 
 	c.JSON(http.StatusOK, gin.H{
-		"message":    "课程已完成",
+		"message":    "Lesson completed",
 		"lesson_id":  lessonID,
 		"user_id":    userID,
 		"completed":  true,
@@ -109,9 +109,9 @@ func AIChat(c *gin.Context) {
 		return
 	}
 
-	// TODO: 调用 AI API
+	// TODO: Call AI API
 	c.JSON(http.StatusOK, gin.H{
-		"response": "AI 响应内容",
+		"response": "AI response content",
 	})
 }
 
@@ -119,12 +119,12 @@ func AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.GetHeader("Authorization")
 		if token == "" {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "未授权"})
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 			c.Abort()
 			return
 		}
 
-		// TODO: 验证 JWT token
+		// TODO: Validate JWT token
 		c.Set("user_id", "demo-user-id")
 		c.Next()
 	}

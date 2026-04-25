@@ -16,20 +16,20 @@ import (
 )
 
 func main() {
-	// 加载配置
+	// Load configuration
 	cfg := config.Load()
 
-	// 初始化日志
+	// Initialize logger
 	logger.Init(cfg.Log)
 
-	// 创建应用
+	// Create application
 	application, cleanup, err := app.InitApp(cfg)
 	if err != nil {
-		log.Fatalf("初始化应用失败: %v", err)
+		log.Fatalf("Failed to initialize application: %v", err)
 	}
 	defer cleanup()
 
-	// 启动HTTP服务器
+	// Start HTTP server
 	srv := &http.Server{
 		Addr:         fmt.Sprintf("%s:%d", cfg.Server.Host, cfg.Server.Port),
 		Handler:      application.Router,
@@ -38,28 +38,28 @@ func main() {
 		IdleTimeout:  60 * time.Second,
 	}
 
-	// 优雅关闭
+	// Graceful shutdown
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 
 	go func() {
-		logger.Info(fmt.Sprintf("服务器启动在 http://%s:%d", cfg.Server.Host, cfg.Server.Port))
-		logger.Info(fmt.Sprintf("运行模式: %s", cfg.Server.Mode))
+		logger.Info(fmt.Sprintf("Server started at http://%s:%d", cfg.Server.Host, cfg.Server.Port))
+		logger.Info(fmt.Sprintf("Running mode: %s", cfg.Server.Mode))
 
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			logger.Fatal("服务器启动失败")
+			logger.Fatal("Failed to start server")
 		}
 	}()
 
 	<-quit
-	logger.Info("正在关闭服务器...")
+	logger.Info("Shutting down server...")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
 	if err := srv.Shutdown(ctx); err != nil {
-		logger.Error("服务器关闭失败")
+		logger.Error("Failed to shutdown server")
 	}
 
-	logger.Info("服务器已关闭")
+	logger.Info("Server stopped")
 }

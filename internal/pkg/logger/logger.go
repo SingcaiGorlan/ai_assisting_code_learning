@@ -47,7 +47,7 @@ func Init(cfg config.LogConfig) {
 		encoder = zapcore.NewConsoleEncoder(encoderConfig)
 	}
 
-	// 输出到控制台和文件
+	// Output to console and file
 	var cores []zapcore.Core
 	consoleCore := zapcore.NewCore(encoder, zapcore.AddSync(os.Stdout), zapLevel)
 	cores = append(cores, consoleCore)
@@ -104,7 +104,7 @@ func Fatal(msg string, fields ...zap.Field) {
 	}
 }
 
-// GormLogger 返回 GORM 的日志适配器
+// NewGormLogger returns GORM logger adapter
 func NewGormLogger() logger.Interface {
 	return logger.Default.LogMode(logger.Info)
 }

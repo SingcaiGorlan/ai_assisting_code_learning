@@ -8,7 +8,7 @@ import (
 )
 
 func RegisterRoutes(router *gin.Engine, db *gorm.DB, redisClient interface{}, cfg *config.Config) {
-	// 健康检查
+	// Health check
 	router.GET("/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"status":  "ok",
@@ -16,10 +16,10 @@ func RegisterRoutes(router *gin.Engine, db *gorm.DB, redisClient interface{}, cf
 		})
 	})
 
-	// API v1 路由组
+	// API v1 route group
 	v1 := router.Group("/api/v1")
 	{
-		// 用户相关路由
+		// User-related routes
 		users := v1.Group("/users")
 		{
 			users.POST("/register", api.Register)
@@ -27,7 +27,7 @@ func RegisterRoutes(router *gin.Engine, db *gorm.DB, redisClient interface{}, cf
 			users.GET("/profile", api.AuthMiddleware(), api.GetProfile)
 		}
 
-		// 学习相关路由
+		// Learning-related routes
 		learning := v1.Group("/learning")
 		learning.Use(api.AuthMiddleware())
 		{
@@ -36,7 +36,7 @@ func RegisterRoutes(router *gin.Engine, db *gorm.DB, redisClient interface{}, cf
 			learning.POST("/lessons/:id/complete", api.CompleteLesson)
 		}
 
-		// AI 辅助路由
+		// AI assistance routes
 		ai := v1.Group("/ai")
 		ai.Use(api.AuthMiddleware())
 		{

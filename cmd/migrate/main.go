@@ -7,23 +7,23 @@ import (
 	"github.com/SingcaiGorlan/ai_assisting_code_learningai-learning-platform/internal/pkg/config"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	// 导入模型包（待创建）
+	// Import model package (to be created)
 	// "github.com/SingcaiGorlan/ai_assisting_code_learningai-learning-platform/internal/domain/model"
 )
 
 func main() {
 	cfg := config.Load()
 
-	// 初始化数据库连接
+	// Initialize database connection
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%d sslmode=%s",
 		cfg.Database.Host, cfg.Database.Username, cfg.Database.Password,
 		cfg.Database.Database, cfg.Database.Port, cfg.Database.SSLMode)
 	_, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
-		log.Fatalf("数据库连接失败: %v", err)
+		log.Fatalf("Failed to connect to database: %v", err)
 	}
 
-	// 调试：打印配置值
+	// Debug: print configuration values
 	fmt.Printf("Database Config:\n")
 	fmt.Printf("  Host: %s\n", cfg.Database.Host)
 	fmt.Printf("  Port: %d\n", cfg.Database.Port)
@@ -32,10 +32,10 @@ func main() {
 	fmt.Printf("  Database: %s\n", cfg.Database.Database)
 	fmt.Printf("  SSLMode: %s\n", cfg.Database.SSLMode)
 
-	log.Println("数据库连接成功")
+	log.Println("Database connection successful")
 
-	// TODO: 实现自动迁移
-	// 取消注释以下代码，并导入模型包后执行迁移
+	// TODO: Implement auto migration
+	// Uncomment the following code and import model package to run migration
 	// if err := db.AutoMigrate(
 	// 	&model.User{},
 	// 	&model.UserProfile{},
@@ -45,8 +45,8 @@ func main() {
 	// 	&model.LearningProgress{},
 	// 	&model.Exercise{},
 	// ); err != nil {
-	// 	log.Fatalf("数据库迁移失败: %v", err)
+	// 	log.Fatalf("Database migration failed: %v", err)
 	// }
 
-	log.Println("迁移完成")
+	log.Println("Migration completed")
 }

@@ -55,7 +55,7 @@ type AIConfig struct {
 
 type JWTConfig struct {
 	Secret string `mapstructure:"secret"`
-	Expire int    `mapstructure:"expire"` // 小时
+	Expire int    `mapstructure:"expire"` // hours
 }
 
 type LogConfig struct {
@@ -67,33 +67,33 @@ type LogConfig struct {
 func Load(configPath ...string) *Config {
 	once.Do(func() {
 		cfg = &Config{}
-		
-		// 默认配置
+
+		// Default configuration
 		viper.SetDefault("server.host", "0.0.0.0")
 		viper.SetDefault("server.port", 8080)
 		viper.SetDefault("server.mode", "debug")
-		
+
 		viper.SetDefault("database.driver", "postgres")
 		viper.SetDefault("database.host", "localhost")
 		viper.SetDefault("database.port", 5432)
 		viper.SetDefault("database.ssl_mode", "disable")
-		
+
 		viper.SetDefault("redis.host", "localhost")
 		viper.SetDefault("redis.port", 6379)
 		viper.SetDefault("redis.db", 0)
-		
+
 		viper.SetDefault("ai.provider", "openai")
 		viper.SetDefault("ai.model", "gpt-3.5-turbo")
 		viper.SetDefault("ai.max_tokens", 1000)
 		viper.SetDefault("ai.temperature", 0.7)
-		
+
 		viper.SetDefault("jwt.expire", 24)
-		
+
 		viper.SetDefault("log.level", "info")
 		viper.SetDefault("log.format", "json")
 		viper.SetDefault("log.file_path", "./logs/app.log")
-		
-		// 读取配置文件
+
+		// Read configuration file
 		if len(configPath) > 0 && configPath[0] != "" {
 			viper.SetConfigFile(configPath[0])
 		} else {
@@ -102,23 +102,23 @@ func Load(configPath ...string) *Config {
 			viper.AddConfigPath("./configs")
 			viper.AddConfigPath(".")
 		}
-		
-		// 读取环境变量
+
+		// Read environment variables
 		viper.AutomaticEnv()
 		viper.SetEnvPrefix("ALP")
-		
-		// 绑定环境变量
+
+		// Bind environment variables
 		bindEnv()
-		
+
 		if err := viper.ReadInConfig(); err != nil {
-			fmt.Printf("读取配置文件失败: %v\n", err)
+			fmt.Printf("Failed to read config file: %v\n", err)
 		}
-		
+
 		if err := viper.Unmarshal(cfg); err != nil {
-			panic(fmt.Sprintf("解析配置失败: %v", err))
+			panic(fmt.Sprintf("Failed to parse config: %v", err))
 		}
 	})
-	
+
 	return cfg
 }
 

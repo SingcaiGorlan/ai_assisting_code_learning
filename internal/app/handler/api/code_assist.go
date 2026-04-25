@@ -18,13 +18,13 @@ func CodeAssist(c *gin.Context) {
 		return
 	}
 
-	// TODO: 调用 AI 进行代码分析
+	// TODO: Call AI for code analysis
 	c.JSON(http.StatusOK, gin.H{
 		"suggestions": []string{
-			"建议1：变量命名可以更清晰",
-			"建议2：考虑添加错误处理",
-			"建议3：可以使用更高效的算法",
+			"Suggestion 1: Variable naming could be clearer",
+			"Suggestion 2: Consider adding error handling",
+			"Suggestion 3: Could use more efficient algorithms",
 		},
-		"analysis": "代码质量良好，但有一些改进空间",
+		"analysis": "Code quality is good, but there is room for improvement",
 	})
 }
