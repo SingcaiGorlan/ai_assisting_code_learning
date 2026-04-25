@@ -20,7 +20,7 @@ export default defineConfig({
       ]
     },
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/SingcaiGorlan/ai_assisting_code_learningai-learning-platform' }
+      { icon: 'github', link: 'https://github.com/SingcaiGorlan/ai_assisting_code_learning' }
     ]
   }
 })
