@@ -43,7 +43,11 @@ func main() {
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 
 	go func() {
-		logger.Info(fmt.Sprintf("Server started at http://%s:%d", cfg.Server.Host, cfg.Server.Port))
+		displayHost := cfg.Server.Host
+		if displayHost == "0.0.0.0" {
+			displayHost = "localhost"
+		}
+		logger.Info(fmt.Sprintf("Server started at http://%s:%d", displayHost, cfg.Server.Port))
 		logger.Info(fmt.Sprintf("Running mode: %s", cfg.Server.Mode))
 
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
