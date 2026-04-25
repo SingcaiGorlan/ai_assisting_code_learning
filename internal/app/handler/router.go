@@ -10,6 +10,7 @@ import (
 func RegisterRoutes(router *gin.Engine, db *gorm.DB, redisClient interface{}, cfg *config.Config) {
 	// Serve static files
 	router.Static("/static", "./web/public")
+	router.Static("/docs", "./web/docs/.vitepress/dist")
 	router.StaticFile("/", "./web/public/index.html")
 
 	// Health check
