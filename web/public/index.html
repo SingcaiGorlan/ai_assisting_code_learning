@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Code Learning Platform</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1>🚀 AI Learning</h1>
+                <p>Code Assistance Platform</p>
+            </div>
+            <nav class="sidebar-nav">
+                <button class="nav-btn active" data-tab="code-assist">
+                    <span>💻</span> Code Assist
+                </button>
+                <button class="nav-btn" data-tab="ai-chat">
+                    <span>🤖</span> AI Chat
+                </button>
+                <button class="nav-btn" data-tab="lessons">
+                    <span>📚</span> Lessons
+                </button>
+                <button class="nav-btn" data-tab="profile">
+                    <span>👤</span> Profile
+                </button>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="avatar">👤</div>
+                    <div class="user-details">
+                        <span class="username">Guest</span>
+                        <span class="user-status">Online</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <h2 class="page-title">Code Assistance</h2>
+                <div class="header-actions">
+                    <button class="btn btn-secondary" id="clearBtn">
+                        <span>🗑️</span> Clear
+                    </button>
+                    <button class="btn btn-primary" id="submitBtn">
+                        <span>✨</span> Analyze Code
+                    </button>
+                </div>
+            </header>
+
+            <!-- Tab Content: Code Assist -->
+            <div class="tab-content active" id="code-assist-tab">
+                <div class="editor-container">
+                    <div class="editor-panel">
+                        <div class="panel-header">
+                            <h3>📝 Code Editor</h3>
+                            <select class="language-select" id="languageSelect">
+                                <option value="javascript">JavaScript</option>
+                                <option value="python">Python</option>
+                                <option value="go">Go</option>
+                                <option value="java">Java</option>
+                                <option value="typescript">TypeScript</option>
+                            </select>
+                        </div>
+                        <textarea 
+                            class="code-editor" 
+                            id="codeEditor"
+                            placeholder="Paste your code here for AI analysis..."
+                            spellcheck="false"
+                        ></textarea>
+                        <div class="editor-footer">
+                            <span class="char-count">0 characters</span>
+                        </div>
+                    </div>
+                    <div class="analysis-panel">
+                        <div class="panel-header">
+                            <h3>📊 Analysis & Suggestions</h3>
+                        </div>
+                        <div class="analysis-content" id="analysisResult">
+                            <div class="placeholder">
+                                <span class="placeholder-icon">🔍</span>
+                                <p>Paste your code and click "Analyze Code" to get AI-powered suggestions</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: AI Chat -->
+            <div class="tab-content" id="ai-chat-tab">
+                <div class="chat-container">
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="message assistant">
+                            <div class="message-avatar">🤖</div>
+                            <div class="message-content">
+                                <p>Hello! I'm your AI learning assistant. How can I help you today?</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chat-input-area">
+                        <textarea 
+                            class="chat-input" 
+                            id="chatInput"
+                            placeholder="Ask me anything about programming..."
+                        ></textarea>
+                        <button class="btn btn-primary" id="sendChatBtn">
+                            <span>📤</span> Send
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Lessons -->
+            <div class="tab-content" id="lessons-tab">
+                <div class="lessons-container">
+                    <div class="lessons-header">
+                        <h3>📚 Learning Path</h3>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 33%"></div>
+                        </div>
+                        <span class="progress-text">1/3 Completed</span>
+                    </div>
+                    <div class="lessons-grid">
+                        <div class="lesson-card completed">
+                            <div class="lesson-status">✅</div>
+                            <h4>Introduction to Programming</h4>
+                            <p>Learn the basics of coding</p>
+                            <button class="btn btn-secondary">Review</button>
+                        </div>
+                        <div class="lesson-card active">
+                            <div class="lesson-status">🔄</div>
+                            <h4>Variables & Data Types</h4>
+                            <p>Understanding data structures</p>
+                            <button class="btn btn-primary">Continue</button>
+                        </div>
+                        <div class="lesson-card">
+                            <div class="lesson-status">🔒</div>
+                            <h4>Control Flow</h4>
+                            <p>Loops and conditionals</p>
+                            <button class="btn btn-secondary">Locked</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Profile -->
+            <div class="tab-content" id="profile-tab">
+                <div class="profile-container">
+                    <div class="profile-header">
+                        <div class="profile-avatar large">👤</div>
+                        <div class="profile-info">
+                            <h3>Guest User</h3>
+                            <p>Member since January 2025</p>
+                        </div>
+                    </div>
+                    <div class="profile-stats">
+                        <div class="stat-card">
+                            <div class="stat-value">12</div>
+                            <div class="stat-label">Lessons Completed</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">48</div>
+                            <div class="stat-label">Code Analyses</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">156</div>
+                            <div class="stat-label">AI Chat Messages</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">7</div>
+                            <div class="stat-label">Day Streak</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <p>AI is analyzing your code...</p>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

@@ -8,6 +8,10 @@ import (
 )
 
 func RegisterRoutes(router *gin.Engine, db *gorm.DB, redisClient interface{}, cfg *config.Config) {
+	// Serve static files
+	router.Static("/static", "./web/public")
+	router.StaticFile("/", "./web/public/index.html")
+
 	// Health check
 	router.GET("/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{
