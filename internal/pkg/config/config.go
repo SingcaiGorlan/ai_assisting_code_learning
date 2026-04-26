@@ -123,11 +123,13 @@ func Load(configPath ...string) *Config {
 }
 
 func bindEnv() {
-	viper.BindEnv("server.host", "ALP_SERVER_HOST")
-	viper.BindEnv("server.port", "ALP_SERVER_PORT")
-	viper.BindEnv("database.host", "ALP_DB_HOST")
-	viper.BindEnv("database.username", "ALP_DB_USER")
-	viper.BindEnv("database.password", "ALP_DB_PASSWORD")
-	viper.BindEnv("ai.api_key", "ALP_AI_API_KEY")
-	viper.BindEnv("jwt.secret", "ALP_JWT_SECRET")
+	// Bind environment variables to config keys
+	// These bindings allow overriding config with environment variables
+	_ = viper.BindEnv("server.host", "ALP_SERVER_HOST")
+	_ = viper.BindEnv("server.port", "ALP_SERVER_PORT")
+	_ = viper.BindEnv("database.host", "ALP_DB_HOST")
+	_ = viper.BindEnv("database.username", "ALP_DB_USER")
+	_ = viper.BindEnv("database.password", "ALP_DB_PASSWORD")
+	_ = viper.BindEnv("ai.api_key", "ALP_AI_API_KEY")
+	_ = viper.BindEnv("jwt.secret", "ALP_JWT_SECRET")
 }

@@ -11,6 +11,7 @@ import (
 	"github.com/SingcaiGorlan/ai_assisting_code_learningai-learning-platform/internal/pkg/logger"
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis/v8"
+	"go.uber.org/zap"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -63,11 +64,15 @@ func InitApp(cfg *config.Config) (*Application, func(), error) {
 
 		sqlDB, err := db.DB()
 		if err == nil {
-			sqlDB.Close()
+			if closeErr := sqlDB.Close(); closeErr != nil {
+				logger.Warn("Failed to close database connection", zap.Error(closeErr))
+			}
 		}
 
 		if redisClient != nil {
-			redisClient.Close()
+			if closeErr := redisClient.Close(); closeErr != nil {
+				logger.Warn("Failed to close Redis connection", zap.Error(closeErr))
+			}
 		}
 	}
 

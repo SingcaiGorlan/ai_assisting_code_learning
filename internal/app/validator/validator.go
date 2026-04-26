@@ -1,6 +1,7 @@
 package validator
 
 import (
+	"fmt"
 	"net"
 	"regexp"
 	"unicode"
@@ -18,9 +19,15 @@ func New() *CustomValidator {
 	v := validator.New()
 
 	// Register custom validation rules
-	v.RegisterValidation("password_strength", validatePasswordStrength)
-	v.RegisterValidation("username", validateUsername)
-	v.RegisterValidation("phone", validatePhone)
+	if err := v.RegisterValidation("password_strength", validatePasswordStrength); err != nil {
+		panic(fmt.Sprintf("failed to register password_strength validation: %v", err))
+	}
+	if err := v.RegisterValidation("username", validateUsername); err != nil {
+		panic(fmt.Sprintf("failed to register username validation: %v", err))
+	}
+	if err := v.RegisterValidation("phone", validatePhone); err != nil {
+		panic(fmt.Sprintf("failed to register phone validation: %v", err))
+	}
 
 	return &CustomValidator{
 		validator: v,
