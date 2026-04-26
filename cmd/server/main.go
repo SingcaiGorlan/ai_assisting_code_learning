@@ -51,8 +51,10 @@ func main() {
 		logger.Info(fmt.Sprintf("Running mode: %s", cfg.Server.Mode))
 
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			logger.Fatal("Failed to start server")
+			log.Fatalf("Failed to start server: %v", err)
 		}
+
+
 	}()
 
 	<-quit
