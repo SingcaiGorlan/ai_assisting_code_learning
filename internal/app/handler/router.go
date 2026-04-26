@@ -7,22 +7,22 @@ import (
 	"gorm.io/gorm"
 )
 
-func RegisterRoutes(router *gin.Engine, db *gorm.DB, redisClient interface{}, cfg *config.Config) {
-	// Serve static files
+func RegisterRoutes(router *gin.Engine, db *gorm.DB, redisClient any, cfg *config.Config) {
+	// Legacy static assets (optional)
 	router.Static("/static", "./web/public")
+	// Docs (VitePress build output)
 	router.Static("/docs", "./web/docs/.vitepress/dist")
+	// Vite app assets
+	router.Static("/assets", "./web/app/dist/assets")
 
-	// Serve the original app under /app route
-	router.StaticFile("/app", "./web/public/index.html")
-	router.Static("/app-static", "./web/public")
+	// Main web app at root
+	router.StaticFile("/", "./web/app/dist/index.html")
 
-	// Serve VitePress homepage
-	router.StaticFile("/", "./web/docs/.vitepress/dist/index.html")
+	// Fallback for unknown routes -> main app (SPA friendly)
+	router.NoRoute(func(c *gin.Context) {
+		c.File("./web/app/dist/index.html")
+	})
 
-	// Serve VitePress guide pages
-	router.StaticFile("/guide/getting-started", "./web/docs/.vitepress/dist/guide/getting-started.html")
-	router.StaticFile("/guide/api", "./web/docs/.vitepress/dist/guide/api.html")
-	router.StaticFile("/guide/frontend", "./web/docs/.vitepress/dist/guide/frontend.html")
 
 	// Health check
 	router.GET("/health", func(c *gin.Context) {
