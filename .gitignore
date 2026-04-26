@@ -1,41 +1,120 @@
-# 依赖
-vendor/
-node_modules/
-
-# 构建输出
-dist/
-build/
-bin/
+# ============================================
+# Go
+# ============================================
+# Binaries for programs and plugins
 *.exe
+*.exe~
 *.dll
+*.so
+*.dylib
 
-# 环境文件
-.env
-.env.local
-.env.*.local
+# Test binary, built with `go test -c`
+*.test
 
-# 日志
+# Output of the go coverage tool
+*.out
+coverage.out
+coverage.txt
+
+# Go workspace file
+go.work
+
+# Dependency directories (if using vendor)
+vendor/
+
+# ============================================
+# Node.js / npm
+# ============================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+
+# ============================================
+# Build outputs
+# ============================================
+bin/
+build/
+dist/
+tmp/
+temp/
+
+# ============================================
+# IDE and Editor files
+# ============================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+
+# ============================================
+# OS generated files
+# ============================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# ============================================
+# Logs
+# ============================================
 logs/
 *.log
 
-# 开发工具
-.idea/
-.vscode/
-*.swp
-*.swo
+# ============================================
+# Environment variables
+# ============================================
+.env
+.env.local
+.env.*.local
+!.env.example
 
-# 数据库
+# ============================================
+# Docker
+# ============================================
+# Keep Dockerfile and docker-compose files
+# But ignore Docker-related temporary files
+.docker/
+
+# ============================================
+# Documentation build output
+# ============================================
+web/docs/.vitepress/dist/
+web/docs/.vitepress/cache/
+
+# ============================================
+# Database files
+# ============================================
 *.db
 *.sqlite
 *.sqlite3
 
-# 配置文件
-configs/*.local.yaml
+# ============================================
+# Temporary files
+# ============================================
+*.tmp
+*.temp
+*.bak
+*.cache
 
-# 操作系统文件
-.DS_Store
-Thumbs.db
+# ============================================
+# Certificates and keys
+# ============================================
+*.pem
+*.key
+*.crt
+*.cert
 
-# 测试相关
-coverage.out
-coverage.html
+# ============================================
+# Uploads and user-generated content
+# ============================================
+uploads/
+storage/
