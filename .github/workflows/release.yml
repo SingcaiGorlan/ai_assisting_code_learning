@@ -1,0 +1,51 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+
+      - name: Get dependencies
+        run: go mod download
+
+      - name: Build
+        run: |
+          mkdir -p dist
+          # Linux
+          GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o dist/app-linux-amd64 .
+          # Windows
+          GOOS=windows GOARCH=amd64 go build -ldflags="-s -w" -o dist/app-windows-amd64.exe .
+          # macOS
+          GOOS=darwin GOARCH=amd64 go build -ldflags="-s -w" -o dist/app-darwin-amd64 .
+
+      - name: Create ZIP archives
+        run: |
+          cd dist
+          zip app-linux-amd64.zip app-linux-amd64
+          zip app-windows-amd64.zip app-windows-amd64.exe
+          zip app-darwin-amd64.zip app-darwin-amd64
+
+      - name: Create SHA256 checksums
+        run: |
+          cd dist
+          sha256sum * > checksums.txt
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: dist/*
+          generate_release_notes: true
