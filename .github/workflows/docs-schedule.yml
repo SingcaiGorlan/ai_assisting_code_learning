@@ -1,0 +1,30 @@
+name: Organize Docs
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'  # 每6小时
+  workflow_dispatch:  # 支持手动触发
+
+jobs:
+  organize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check docs structure
+        run: |
+          echo "## 文档目录结构" >> $GITHUB_STEP_SUMMARY
+          find docs -type f -name "*.md" | sort >> $GITHUB_STEP_SUMMARY
+          
+          echo "## 检查 README.md" >> $GITHUB_STEP_SUMMARY
+          head -20 README.md >> $GITHUB_STEP_SUMMARY
+          
+          echo "## TODO/FIXME 统计" >> $GITHUB_STEP_SUMMARY
+          grep -r "TODO\|FIXME" --include="*.go" --include="*.ts" . | wc -l >> $GITHUB_STEP_SUMMARY
+
+      - name: Create PR if changes
+        uses: peter-evans/create-pull-request@v5
+        with:
+          title: 'docs: 自动整理文档'
+          branch: docs/auto-organize
+          commit-message: 'docs: organize docs'
