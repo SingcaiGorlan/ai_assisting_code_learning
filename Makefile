@@ -17,8 +17,8 @@ setup:
 	@echo "Installing Go dependencies..."
 	go mod download
 	@echo "Installing development tools..."
-	go install github.com/cosmtrek/air@latest
-	go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+	go install github.com/air-verse/air@latest
+	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b "$(shell go env GOPATH)/bin" latest
 	go install github.com/swaggo/swag/cmd/swag@latest
 	@echo "Creating configuration files..."
 	cp .env.example .env.local

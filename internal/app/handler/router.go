@@ -11,7 +11,18 @@ func RegisterRoutes(router *gin.Engine, db *gorm.DB, redisClient interface{}, cf
 	// Serve static files
 	router.Static("/static", "./web/public")
 	router.Static("/docs", "./web/docs/.vitepress/dist")
-	router.StaticFile("/", "./web/public/index.html")
+
+	// Serve the original app under /app route
+	router.StaticFile("/app", "./web/public/index.html")
+	router.Static("/app-static", "./web/public")
+
+	// Serve VitePress homepage
+	router.StaticFile("/", "./web/docs/.vitepress/dist/index.html")
+
+	// Serve VitePress guide pages
+	router.StaticFile("/guide/getting-started", "./web/docs/.vitepress/dist/guide/getting-started.html")
+	router.StaticFile("/guide/api", "./web/docs/.vitepress/dist/guide/api.html")
+	router.StaticFile("/guide/frontend", "./web/docs/.vitepress/dist/guide/frontend.html")
 
 	// Health check
 	router.GET("/health", func(c *gin.Context) {
