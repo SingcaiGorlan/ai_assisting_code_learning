@@ -2,6 +2,17 @@
 
 基于 Go + Gin + PostgreSQL + Redis 构建的 AI 驱动代码学习平台。
 
+## ✨ 最新更新
+
+🎉 **前端已全新升级!** 使用 React + Tailwind CSS 打造现代化用户界面,提供更美观、更流畅的学习体验!
+
+- 🌈 渐变背景和玻璃态设计
+- 📱 完全响应式布局
+- 💫 流畅的动画效果
+- 🎯 直观的用户交互
+
+查看 [启动指南](STARTUP_GUIDE.md) 了解更多详情!
+
 ## 📋 功能特性
 
 - ✅ **用户管理**: 用户注册、登录、个人资料管理
@@ -25,8 +36,8 @@
 ### 环境要求
 
 - Go 1.21+
-- Docker & Docker Compose
-- Node.js 18+ (如需前端开发)
+- Docker & Docker Compose (或 Podman)
+- Node.js 18+ (前端开发)
 
 ### 安装步骤
 
@@ -48,7 +59,14 @@
    make setup
    ```
 
-3. **启动依赖服务（Podman）**
+3. **启动依赖服务**
+
+   - **使用 Docker:**
+   ```bash
+   docker compose -f docker-compose.dev.yml up -d
+   ```
+
+   - **使用 Podman:**
    ```bash
    podman compose -f docker-compose.dev.yml up -d
    ```
@@ -59,19 +77,32 @@
    # 编辑 .env.local 文件，填入必要的配置
    ```
 
-5. **启动开发服务器**
-
-   - **Windows（PowerShell）**
-   ```powershell
-   powershell -ExecutionPolicy Bypass -File scripts/dev.ps1
-   ```
-
-   - **通用方式**
+5. **运行数据库迁移**
    ```bash
-   go run ./cmd/server
+   make migrate
+   # 或
+   go run cmd/migrate/main.go
    ```
 
-服务将在 `http://localhost:8080` 启动
+6. **启动服务**
+
+   **前端 (React + Tailwind):**
+   ```bash
+   cd web/react-app
+   npm install
+   npm run dev
+   ```
+   前端将运行在: http://localhost:5173
+
+   **后端 (Go):**
+   ```bash
+   # 方式一: 使用 air 热重载
+   make dev
+   
+   # 方式二: 直接运行
+   go run cmd/server/main.go
+   ```
+   后端将运行在: http://localhost:8080
 
 ## 📖 可用命令
 
@@ -152,12 +183,19 @@ make swag
 │   ├── postgres/         # 数据库脚本
 │   └── terraform/        # Terraform 配置
 ├── web/                  # 前端代码
+│   ├── react-app/        # ✨ React + Tailwind 前端 (新!)
+│   │   ├── src/
+│   │   │   ├── App.jsx   # 主应用组件
+│   │   │   └── index.css # Tailwind CSS
+│   │   └── package.json
+│   └── docs/             # VitePress 文档站点
 ├── docs/                 # 文档
 ├── tests/                # 测试
 ├── scripts/              # 脚本
 ├── docker-compose.dev.yml # Docker Compose 配置
 ├── go.mod               # Go 模块定义
 ├── Makefile             # Make 命令
+├── STARTUP_GUIDE.md     # 📖 启动指南 (新!)
 └── .air.toml           # Air 热重载配置
 ```
 
