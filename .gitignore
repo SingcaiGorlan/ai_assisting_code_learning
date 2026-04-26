@@ -22,6 +22,9 @@ go.work
 # Dependency directories (if using vendor)
 vendor/
 
+# Build output
+tmp/
+
 # ============================================
 # Node.js / npm
 # ============================================
@@ -30,6 +33,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 package-lock.json
+pnpm-lock.yaml
 
 # ============================================
 # Build outputs
@@ -37,7 +41,6 @@ package-lock.json
 bin/
 build/
 dist/
-tmp/
 temp/
 
 # ============================================
@@ -118,3 +121,10 @@ web/docs/.vitepress/cache/
 # ============================================
 uploads/
 storage/
+
+# ============================================
+# AI Assistant specific
+# ============================================
+.ai-assistant/
+.cursor/
+.claude/

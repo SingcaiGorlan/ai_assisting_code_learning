@@ -1,4 +1,4 @@
-.PHONY: help setup dev build test clean lint docker-up docker-down
+.PHONY: help setup dev build test clean lint docker-up docker-down migrate swag clean-all
 
 # Default target
 help:
@@ -9,8 +9,11 @@ help:
 	@echo "  make test       Run tests"
 	@echo "  make lint       Code linting"
 	@echo "  make clean      Clean build files"
+	@echo "  make clean-all  Deep clean (including node_modules)"
 	@echo "  make docker-up  Start Docker services"
 	@echo "  make docker-down Stop Docker services"
+	@echo "  make migrate    Run database migration"
+	@echo "  make swag       Generate API documentation"
 
 # Initialize development environment
 setup:
@@ -50,9 +53,20 @@ lint:
 # Clean
 clean:
 	@echo "Cleaning build files..."
-	if exist bin rmdir /s /q bin
-	if exist tmp rmdir /s /q tmp
-	if exist coverage.out del /q coverage.out
+	rm -rf tmp/*
+	rm -rf logs/*
+	rm -rf bin/
+	rm -f coverage.out coverage.txt
+	find . -name "*.test" -type f -delete
+	@echo "✅ Clean complete"
+
+# Deep clean (including node_modules)
+clean-all: clean
+	@echo "Deep cleaning (this will remove node_modules)..."
+	find web -name 'node_modules' -type d -prune -exec rm -rf {} +
+	rm -rf web/*/dist web/*/build
+	rm -rf web/docs/.vitepress/dist web/docs/.vitepress/cache
+	@echo "✅ Deep clean complete"
 
 # Start Docker services
 docker-up:
