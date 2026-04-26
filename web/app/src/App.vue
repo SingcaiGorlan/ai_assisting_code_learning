@@ -1,78 +1,177 @@
 <template>
   <div class="page">
-    <header class="hero">
-      <div class="container hero-inner">
-        <div>
-          <p class="badge">🚀 AI Learning Platform</p>
-          <h1>Build faster with AI-driven learning & code assistance</h1>
-          <p class="subtitle">Unified portal: AI chat, code analysis, lessons, and admin tools. Crafted for developers and teams.</p>
-          <div class="hero-actions">
-            <button class="btn" @click="goDocs">View Docs</button>
-            <button class="btn ghost" @click="goAdmin">Open Admin</button>
-          </div>
-          <div class="highlights">
-            <div class="pill">Code Assist</div>
-            <div class="pill">AI Chat</div>
-            <div class="pill">Lessons & Progress</div>
-            <div class="pill">User Management</div>
-          </div>
-        </div>
-        <div class="glass card">
-          <p class="mini-title">Live API snapshot</p>
-          <ul>
-            <li><span>Health</span><code>GET /health</code></li>
-            <li><span>Login</span><code>POST /api/v1/users/login</code></li>
-            <li><span>Lessons</span><code>GET /api/v1/learning/lessons</code></li>
-            <li><span>AI Chat</span><code>POST /api/v1/ai/chat</code></li>
-          </ul>
-          <small class="muted">Backend running at http://localhost:8080</small>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+      <div class="container nav-inner">
+        <div class="logo">🚀 AI Learning</div>
+        <div class="nav-links">
+          <a href="#" @click.prevent="currentView = 'home'" :class="{ active: currentView === 'home' }">首页</a>
+          <a href="#" @click.prevent="currentView = 'ai'" :class="{ active: currentView === 'ai' }">AI 助手</a>
+          <a href="#" @click.prevent="currentView = 'user'" :class="{ active: currentView === 'user' }">用户中心</a>
+          <a href="#" @click.prevent="currentView = 'learning'" :class="{ active: currentView === 'learning' }">学习中心</a>
+          <a href="#" @click="goAdmin">管理后台</a>
         </div>
       </div>
-    </header>
+    </nav>
 
-    <main class="container sections">
-      <section class="grid">
-        <div class="card feature">
-          <h3>AI Code Assist</h3>
-          <p>Analyze code, detect issues, and receive actionable suggestions in seconds.</p>
-          <span class="tag">/api/v1/ai/code-assist</span>
-        </div>
-        <div class="card feature">
-          <h3>Learning Path</h3>
-          <p>Curated lessons with progress tracking and exercises for your team.</p>
-          <span class="tag">/api/v1/learning/*</span>
-        </div>
-        <div class="card feature">
-          <h3>Admin Console</h3>
-          <p>Manage users, roles, and platform data through a modern dashboard.</p>
-          <span class="tag">/admin/</span>
-        </div>
-      </section>
-
-      <section class="cta card">
-        <div>
-          <h2>Ready to explore?</h2>
-          <p class="muted">Start the backend, open the admin, and call the APIs — everything runs locally.</p>
-        </div>
-        <div class="cta-actions">
-          <button class="btn" @click="openUrl('http://localhost:8080/health')">Check Health</button>
-          <button class="btn ghost" @click="goAdmin">Open Admin</button>
-        </div>
-      </section>
-    </main>
+    <!-- 视图内容 -->
+    <component :is="currentComponent" />
   </div>
 </template>
 
 <script setup lang="ts">
-const openUrl = (url: string) => window.open(url, '_blank')
-const goDocs = () => openUrl('/docs')
-const goAdmin = () => openUrl('http://localhost:4174/admin/')
+import { ref, computed } from 'vue'
+import UserCenter from './views/UserCenter.vue'
+import LearningCenter from './views/LearningCenter.vue'
+import AIAssistant from './views/AIAssistant.vue'
+
+type ViewType = 'home' | 'ai' | 'user' | 'learning'
+
+const currentView = ref<ViewType>('home')
+
+const currentComponent = computed(() => {
+  switch (currentView.value) {
+    case 'user':
+      return UserCenter
+    case 'learning':
+      return LearningCenter
+    case 'ai':
+      return AIAssistant
+    default:
+      return HomeView
+  }
+})
+
+const goAdmin = () => window.open('http://localhost:4174/admin/', '_blank')
+
+// 首页视图组件
+const HomeView = {
+  template: `
+    <div class="home-view">
+      <header class="hero">
+        <div class="container hero-inner">
+          <div>
+            <p class="badge">🚀 AI Learning Platform</p>
+            <h1>Build faster with AI-driven learning & code assistance</h1>
+            <p class="subtitle">Unified portal: AI chat, code analysis, lessons, and admin tools. Crafted for developers and teams.</p>
+            <div class="hero-actions">
+              <button class="btn" @click="goDocs">View Docs</button>
+              <button class="btn ghost" @click="goAdmin">Open Admin</button>
+            </div>
+            <div class="highlights">
+              <div class="pill">Code Assist</div>
+              <div class="pill">AI Chat</div>
+              <div class="pill">Lessons & Progress</div>
+              <div class="pill">User Management</div>
+            </div>
+          </div>
+          <div class="glass card">
+            <p class="mini-title">Live API snapshot</p>
+            <ul>
+              <li><span>Health</span><code>GET /health</code></li>
+              <li><span>Login</span><code>POST /api/v1/users/login</code></li>
+              <li><span>Lessons</span><code>GET /api/v1/learning/lessons</code></li>
+              <li><span>AI Chat</span><code>POST /api/v1/ai/chat</code></li>
+            </ul>
+            <small class="muted">Backend running at http://localhost:8080</small>
+          </div>
+        </div>
+      </header>
+
+      <main class="container sections">
+        <section class="grid">
+          <div class="card feature">
+            <h3>AI Code Assist</h3>
+            <p>Analyze code, detect issues, and receive actionable suggestions in seconds.</p>
+            <span class="tag">/api/v1/ai/code-assist</span>
+          </div>
+          <div class="card feature">
+            <h3>Learning Path</h3>
+            <p>Curated lessons with progress tracking and exercises for your team.</p>
+            <span class="tag">/api/v1/learning/*</span>
+          </div>
+          <div class="card feature">
+            <h3>Admin Console</h3>
+            <p>Manage users, roles, and platform data through a modern dashboard.</p>
+            <span class="tag">/admin/</span>
+          </div>
+        </section>
+
+        <section class="cta card">
+          <div>
+            <h2>Ready to explore?</h2>
+            <p class="muted">Start the backend, open the admin, and call the APIs — everything runs locally.</p>
+          </div>
+          <div class="cta-actions">
+            <button class="btn" @click="openUrl('http://localhost:8080/health')">Check Health</button>
+            <button class="btn ghost" @click="goAdmin">Open Admin</button>
+          </div>
+        </section>
+      </main>
+    </div>
+  `,
+  methods: {
+    openUrl(url: string) { window.open(url, '_blank') },
+    goDocs() { window.open('/docs', '_blank') },
+    goAdmin() { window.open('http://localhost:4174/admin/', '_blank') }
+  }
+}
 </script>
 
 <style scoped>
 .page {
   color: var(--text);
+  min-height: 100vh;
 }
+
+/* 导航栏 */
+.navbar {
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.nav-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+}
+
+.logo {
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--text);
+}
+
+.nav-links {
+  display: flex;
+  gap: 24px;
+}
+
+.nav-links a {
+  color: var(--muted);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+
+.nav-links a:hover {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.nav-links a.active {
+  color: #3b82f6;
+  background: rgba(59, 130, 246, 0.1);
+}
+
+/* 首页样式（保持原有） */
 .hero {
   padding: 64px 0;
   background: radial-gradient(circle at 20% 20%, rgba(59,130,246,0.25), transparent 35%),
@@ -160,5 +259,7 @@ h1 {
 
 @media (max-width: 900px) {
   .hero-inner { grid-template-columns: 1fr; }
+  .nav-links { gap: 12px; }
+  .nav-links a { padding: 6px 8px; font-size: 14px; }
 }
 </style>
