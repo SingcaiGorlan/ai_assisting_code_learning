@@ -1,18 +1,6 @@
 import { useState, useEffect } from 'react'
 import { BookOpen, PlayCircle, CheckCircle } from 'lucide-react'
 
-declare global {
-  interface Window {
-    go: {
-      main: {
-        App: {
-          GetLessons: () => Promise<any[]>
-        }
-      }
-    }
-  }
-}
-
 export default function Lessons() {
   const [lessons, setLessons] = useState<any[]>([])
   const [loading, setLoading] = useState(true)

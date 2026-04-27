@@ -128,5 +128,6 @@ func (a *App) CodeAssist(code, question string) map[string]interface{} {
 
 // OpenExternalLink opens a URL in the default browser
 func (a *App) OpenExternalLink(url string) error {
-	return runtime.BrowserOpenURL(a.ctx, url)
+	runtime.BrowserOpenURL(a.ctx, url)
+	return nil
 }

@@ -5,19 +5,6 @@ interface LoginProps {
   onLogin: (user: any) => void
 }
 
-declare global {
-  interface Window {
-    go: {
-      main: {
-        App: {
-          Login: (username: string, password: string) => Promise<any>
-          Register: (username: string, email: string, password: string) => Promise<any>
-        }
-      }
-    }
-  }
-}
-
 export default function Login({ onLogin }: LoginProps) {
   const [isRegister, setIsRegister] = useState(false)
   const [formData, setFormData] = useState({

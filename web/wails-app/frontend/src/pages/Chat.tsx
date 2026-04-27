@@ -1,19 +1,6 @@
 import { useState } from 'react'
 import { Send, Sparkles, Code, Loader2 } from 'lucide-react'
 
-declare global {
-  interface Window {
-    go: {
-      main: {
-        App: {
-          ChatWithAI: (message: string) => Promise<any>
-          CodeAssist: (code: string, question: string) => Promise<any>
-        }
-      }
-    }
-  }
-}
-
 export default function Chat() {
   const [activeTab, setActiveTab] = useState<'chat' | 'code'>('chat')
   const [messages, setMessages] = useState<Array<{ role: 'user' | 'ai', content: string }>>([])
