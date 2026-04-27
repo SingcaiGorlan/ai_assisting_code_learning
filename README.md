@@ -4,12 +4,24 @@
 
 ## ✨ 最新更新
 
-🎉 **前端已全新升级!** 使用 React + Tailwind CSS 打造现代化用户界面,提供更美观、更流畅的学习体验!
+🎉 **前端已全新升级!** 
+
+### Web 版本
+使用 React + Tailwind CSS 打造现代化用户界面,提供更美观、更流畅的学习体验!
 
 - 🌈 渐变背景和玻璃态设计
 - 📱 完全响应式布局
 - 💫 流畅的动画效果
 - 🎯 直观的用户交互
+
+### 🖥️ 桌面应用 (新增!)
+基于 **Wails v2** 构建跨平台桌面应用:
+
+- ⚡ 原生性能,内存占用低
+- 📦 体积小巧 (相比 Electron 减小 80%)
+- 🔒 本地运行,数据更安全
+- 🎨 与 Web 版相同的精美 UI
+- 💻 支持 Windows/macOS/Linux
 
 查看 [启动指南](STARTUP_GUIDE.md) 了解更多详情!
 
@@ -38,6 +50,7 @@
 - Go 1.21+
 - Docker & Docker Compose (或 Podman)
 - Node.js 18+ (前端开发)
+- Wails CLI (桌面应用可选)
 
 ### 安装步骤
 
@@ -86,7 +99,7 @@
 
 6. **启动服务**
 
-   **前端 (React + Tailwind):**
+   ### Web 前端 (React + Tailwind)
    ```bash
    cd web/react-app
    npm install
@@ -94,7 +107,7 @@
    ```
    前端将运行在: http://localhost:5173
 
-   **后端 (Go):**
+   ### 后端 (Go)
    ```bash
    # 方式一: 使用 air 热重载
    make dev
@@ -103,6 +116,28 @@
    go run cmd/server/main.go
    ```
    后端将运行在: http://localhost:8080
+
+   ### 🖥️ 桌面应用 (Wails - 推荐!)
+   
+   **Windows:**
+   ```powershell
+   powershell -ExecutionPolicy Bypass -File scripts/start-wails.ps1
+   ```
+   
+   **Linux/macOS:**
+   ```bash
+   cd web/wails-app
+   ./start.sh
+   # 选择选项 1 安装依赖,然后选择选项 2 启动
+   ```
+   
+   或直接使用:
+   ```bash
+   cd web/wails-app
+   wails dev
+   ```
+
+   > 💡 **提示**: Wails 桌面应用提供原生性能,体积更小,内存占用更低,推荐使用!
 
 ## 📖 可用命令
 
@@ -183,7 +218,12 @@ make swag
 │   ├── postgres/         # 数据库脚本
 │   └── terraform/        # Terraform 配置
 ├── web/                  # 前端代码
-│   ├── react-app/        # ✨ React + Tailwind 前端 (新!)
+│   ├── wails-app/        # 🖥️ Wails 桌面应用 (新!)
+│   │   ├── main.go       # 应用入口
+│   │   ├── app.go        # Go 应用逻辑
+│   │   ├── frontend/     # React 前端
+│   │   └── scripts/      # PowerShell 脚本
+│   ├── react-app/        # ✨ React + Tailwind Web 应用
 │   │   ├── src/
 │   │   │   ├── App.jsx   # 主应用组件
 │   │   │   └── index.css # Tailwind CSS
@@ -192,6 +232,7 @@ make swag
 ├── docs/                 # 文档
 ├── tests/                # 测试
 ├── scripts/              # 脚本
+│   └── start-wails.ps1  # 🚀 Wails 快速启动脚本
 ├── docker-compose.dev.yml # Docker Compose 配置
 ├── go.mod               # Go 模块定义
 ├── Makefile             # Make 命令

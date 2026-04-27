@@ -1,0 +1,14 @@
+# Wails 构建产物
+build/
+
+# 依赖
+node_modules/
+
+# 开发文件
+*.log
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
