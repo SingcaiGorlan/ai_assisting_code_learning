@@ -1,4 +1,4 @@
-.PHONY: help setup dev build test clean lint docker-up docker-down migrate swag clean-all
+.PHONY: help setup dev build test clean lint docker-up docker-down migrate swag clean-all cli
 
 # Default target
 help:
@@ -14,6 +14,8 @@ help:
 	@echo "  make docker-down Stop Docker services"
 	@echo "  make migrate    Run database migration"
 	@echo "  make swag       Generate API documentation"
+	@echo "  make cli        Build CLI tool"
+	@echo "  make cli-run    Run CLI tool with help"
 
 # Initialize development environment
 setup:
@@ -52,18 +54,13 @@ lint:
 
 # Clean
 clean:
-	@echo "Cleaning build files..."
-	rm -rf tmp/*
-	rm -rf logs/*
-	rm -rf bin/
-	rm -f coverage.out coverage.txt
-	find . -name "*.test" -type f -delete
-	@echo "✅ Clean complete"
+	@echo "🧹 Cleaning build files..."
+	@bash scripts/clean.sh
 
 # Deep clean (including node_modules)
 clean-all: clean
 	@echo "Deep cleaning (this will remove node_modules)..."
-	find web -name 'node_modules' -type d -prune -exec rm -rf {} +
+	find web -name 'node_modules' -type d -prune -exec rm -rf {} + || true
 	rm -rf web/*/dist web/*/build
 	rm -rf web/docs/.vitepress/dist web/docs/.vitepress/cache
 	@echo "✅ Deep clean complete"
@@ -87,3 +84,15 @@ migrate:
 swag:
 	@echo "Generating Swagger documentation..."
 	swag init -g internal/app/handler/router.go -o docs/api
+
+# Build CLI tool
+cli:
+	@echo "Building CLI tool..."
+	go build -o bin/ai-learning-cli ./cmd/cli
+	@echo "✅ CLI built successfully at bin/ai-learning-cli"
+	@echo "Usage: ./bin/ai-learning-cli --help"
+
+# Run CLI tool with help
+cli-run: cli
+	@echo ""
+	./bin/ai-learning-cli --help

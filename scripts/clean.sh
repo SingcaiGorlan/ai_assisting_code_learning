@@ -1,98 +1,95 @@
 #!/bin/bash
 
 # ============================================
-# 项目清理脚本
-# 用于清理临时文件、日志和构建产物
+# 项目文件清理脚本
+# 用于清理编译产物、临时文件和缓存
 # ============================================
 
 set -e
 
-echo "🧹 开始清理项目..."
+echo "🧹 开始清理项目文件..."
 
-# 颜色定义
+# 定义颜色输出
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
-# 获取脚本所在目录的父目录（项目根目录）
-PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-
-cd "$PROJECT_ROOT"
-
-echo -e "${YELLOW}📁 项目根目录: $PROJECT_ROOT${NC}"
-echo ""
-
-# 1. 清理 Go 编译产物
-echo -e "${YELLOW}🔧 清理 Go 编译产物...${NC}"
+# 清理编译产物
+echo -e "\n${YELLOW}📦 清理编译产物...${NC}"
 if [ -d "tmp" ]; then
-    rm -rf tmp/*
-    echo -e "${GREEN}✓ 已清理 tmp/ 目录${NC}"
-else
-    echo -e "${GREEN}✓ tmp/ 目录不存在，跳过${NC}"
+    rm -rf tmp
+    echo -e "${GREEN}✓ 清理 tmp/ 目录${NC}"
 fi
 
-# 2. 清理日志文件
-echo -e "${YELLOW}📝 清理日志文件...${NC}"
+if [ -d "bin" ]; then
+    rm -rf bin
+    echo -e "${GREEN}✓ 清理 bin/ 目录${NC}"
+fi
+
+# 清理日志文件
+echo -e "\n${YELLOW}📝 清理日志文件...${NC}"
 if [ -d "logs" ]; then
-    rm -rf logs/*
-    echo -e "${GREEN}✓ 已清理 logs/ 目录${NC}"
-else
-    echo -e "${GREEN}✓ logs/ 目录不存在，跳过${NC}"
+    find logs -name "*.log" -type f -delete 2>/dev/null || true
+    echo -e "${GREEN}✓ 清理 logs/ 目录中的日志文件${NC}"
 fi
 
-# 清理根目录的日志文件
-find . -maxdepth 1 -name "*.log" -type f -delete 2>/dev/null || true
-echo -e "${GREEN}✓ 已清理根目录日志文件${NC}"
+# 清理 Vim 临时文件
+echo -e "\n${YELLOW}📄 清理编辑器临时文件...${NC}"
+find . -name "*.swp" -o -name "*.swo" -o -name "*~" -type f -delete 2>/dev/null || true
+echo -e "${GREEN}✓ 清理 Vim 临时文件${NC}"
 
-# 3. 清理前端构建产物
-echo -e "${YELLOW}🌐 清理前端构建产物...${NC}"
-for dir in web/*/dist web/*/build; do
-    if [ -d "$dir" ]; then
-        rm -rf "$dir"
-        echo -e "${GREEN}✓ 已清理 $dir${NC}"
-    fi
-done
+# 清理前端构建产物
+echo -e "\n${YELLOW}🌐 清理前端构建产物...${NC}"
+if [ -d "web/app/dist" ]; then
+    rm -rf web/app/dist
+    echo -e "${GREEN}✓ 清理 web/app/dist/${NC}"
+fi
 
-# 4. 清理 VitePress 缓存和构建产物
-echo -e "${YELLOW}📚 清理 VitePress 缓存...${NC}"
+if [ -d "web/admin/dist" ]; then
+    rm -rf web/admin/dist
+    echo -e "${GREEN}✓ 清理 web/admin/dist/${NC}"
+fi
+
 if [ -d "web/docs/.vitepress/dist" ]; then
     rm -rf web/docs/.vitepress/dist
-    echo -e "${GREEN}✓ 已清理 VitePress dist/${NC}"
+    echo -e "${GREEN}✓ 清理 web/docs/.vitepress/dist/${NC}"
 fi
+
 if [ -d "web/docs/.vitepress/cache" ]; then
     rm -rf web/docs/.vitepress/cache
-    echo -e "${GREEN}✓ 已清理 VitePress cache/${NC}"
+    echo -e "${GREEN}✓ 清理 web/docs/.vitepress/cache/${NC}"
 fi
 
-# 5. 清理 Go 测试覆盖文件
-echo -e "${YELLOW}🧪 清理测试覆盖文件...${NC}"
-find . -name "coverage.out" -o -name "coverage.txt" -o -name "*.test" | while read file; do
-    rm -f "$file"
-    echo -e "${GREEN}✓ 已清理 $file${NC}"
-done
+# 清理 Wails 构建产物
+echo -e "\n${YELLOW}🖥️ 清理 Wails 构建产物...${NC}"
+if [ -d "web/wails-app/build/bin" ]; then
+    rm -rf web/wails-app/build/bin
+    echo -e "${GREEN}✓ 清理 web/wails-app/build/bin/${NC}"
+fi
 
-# 6. 清理临时文件
-echo -e "${YELLOW}🗑️  清理临时文件...${NC}"
-find . -name "*.tmp" -o -name "*.temp" -o -name "*.bak" -o -name "*.cache" | while read file; do
-    rm -f "$file"
-    echo -e "${GREEN}✓ 已清理 $file${NC}"
-done
+if [ -d "web/wails-app/frontend/dist" ]; then
+    rm -rf web/wails-app/frontend/dist
+    echo -e "${GREEN}✓ 清理 web/wails-app/frontend/dist/${NC}"
+fi
 
-# 7. 清理操作系统文件
-echo -e "${YELLOW}💻 清理操作系统文件...${NC}"
-find . -name ".DS_Store" -o -name "Thumbs.db" | while read file; do
-    rm -f "$file"
-    echo -e "${GREEN}✓ 已清理 $file${NC}"
-done
+# 清理 Go 测试覆盖文件
+echo -e "\n${YELLOW}🧪 清理测试文件...${NC}"
+find . -name "coverage.out" -o -name "coverage.txt" -o -name "*.test" -type f -delete 2>/dev/null || true
+echo -e "${GREEN}✓ 清理 Go 测试覆盖文件${NC}"
 
-echo ""
-echo -e "${GREEN}✅ 清理完成！${NC}"
-echo ""
-echo -e "${YELLOW}📊 当前项目状态:${NC}"
-echo "  - Git 状态:"
-git status --short 2>/dev/null | head -5 || echo "    （非 Git 仓库或 Git 未安装）"
-echo ""
-echo -e "${YELLOW}💡 提示:${NC}"
-echo "  - 如需清理 node_modules，请运行: find web -name 'node_modules' -type d -prune -exec rm -rf {} +"
-echo "  - 查看忽略的文件: git status --ignored"
+# 清理数据库文件
+echo -e "\n${YELLOW}💾 清理临时数据库文件...${NC}"
+find . -name "*.db" -o -name "*.sqlite" -o -name "*.sqlite3" -type f -delete 2>/dev/null || true
+echo -e "${GREEN}✓ 清理临时数据库文件${NC}"
+
+# 清理缓存目录
+echo -e "\n${YELLOW}🗂️ 清理缓存目录...${NC}"
+find . -name ".cache" -type d -exec rm -rf {} + 2>/dev/null || true
+find . -name "__pycache__" -type d -exec rm -rf {} + 2>/dev/null || true
+echo -e "${GREEN}✓ 清理缓存目录${NC}"
+
+echo -e "\n${GREEN}✅ 清理完成！${NC}"
+echo -e "\n${YELLOW}提示：${NC}"
+echo -e "  - 使用 'make clean' 可以执行同样的清理操作"
+echo -e "  - 如需清理 node_modules，请手动删除各子应用下的 node_modules 目录"

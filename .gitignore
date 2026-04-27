@@ -24,6 +24,7 @@ vendor/
 
 # Build output
 tmp/
+bin/
 
 # ============================================
 # Node.js / npm
@@ -34,13 +35,13 @@ yarn-debug.log*
 yarn-error.log*
 package-lock.json
 pnpm-lock.yaml
+yarn.lock
 
 # ============================================
 # Build outputs
 # ============================================
-bin/
-build/
 dist/
+build/
 temp/
 
 # ============================================
@@ -54,6 +55,8 @@ temp/
 .project
 .classpath
 .settings/
+*.sublime-project
+*.sublime-workspace
 
 # ============================================
 # OS generated files
@@ -65,6 +68,7 @@ temp/
 .Trashes
 ehthumbs.db
 Thumbs.db
+Desktop.ini
 
 # ============================================
 # Logs
@@ -128,3 +132,17 @@ storage/
 .ai-assistant/
 .cursor/
 .claude/
+.cursorrules
+.claude-code
+
+# ============================================
+# Wails
+# ============================================
+wails-app/build/bin/
+wails-app/frontend/dist/
+
+# ============================================
+# Frontend app builds
+# ============================================
+web/*/dist/
+web/*/build/

@@ -41,6 +41,7 @@
 - **对象存储**: MinIO
 - **配置管理**: Viper
 - **日志**: Zap
+- **CLI工具**: Cobra
 - **开发工具**: Air (热重载)
 
 ## 🚀 快速开始
@@ -153,6 +154,12 @@ powershell -ExecutionPolicy Bypass -File scripts/build.ps1
 # 启动开发服务
 powershell -ExecutionPolicy Bypass -File scripts/dev.ps1
 
+# 构建CLI工具
+go build -o bin/ai-learning-cli.exe ./cmd/cli
+
+# 使用CLI工具
+.\bin\ai-learning-cli.exe --help
+
 # 启动 Docker 服务
 docker-compose -f docker-compose.dev.yml up -d
 
@@ -171,6 +178,9 @@ make dev
 
 # 编译项目
 make build
+
+# 构建CLI工具
+make cli
 
 # 运行测试
 make test
@@ -193,6 +203,37 @@ make migrate
 # 生成 API 文档
 make swag
 ```
+
+### 🛠️ CLI 工具（新功能！）
+
+项目新增了强大的命令行界面（CLI）工具：
+
+```bash
+# 构建CLI
+make cli
+
+# 查看帮助
+./bin/ai-learning-cli --help
+
+# 检查配置
+./bin/ai-learning-cli config get
+
+# 测试数据库连接
+./bin/ai-learning-cli db status
+
+# 运行数据库迁移
+./bin/ai-learning-cli db migrate
+
+# 用户管理
+./bin/ai-learning-cli user list
+./bin/ai-learning-cli user create username email -p password
+
+# AI功能
+./bin/ai-learning-cli ai chat
+./bin/ai-learning-cli ai test
+```
+
+查看更多CLI命令：[CLI 完整指南](docs/CLI_GUIDE.md)
 
 ## 📁 项目结构
 
