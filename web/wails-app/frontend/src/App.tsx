@@ -4,7 +4,9 @@ import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import Lessons from './pages/Lessons'
 import Chat from './pages/Chat'
-import Navbar from './components/Navbar'
+import Sidebar from './components/Sidebar'
+import TabBar from './components/TabBar'
+import StatusBar from './components/StatusBar'
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
@@ -35,37 +37,58 @@ function App() {
 
   return (
     <BrowserRouter>
-      <div className="h-screen flex flex-col">
-        {isLoggedIn && <Navbar user={user} onLogout={handleLogout} />}
-        <div className="flex-1 overflow-hidden">
-          <Routes>
-            <Route 
-              path="/login" 
-              element={
-                !isLoggedIn ? <Login onLogin={handleLogin} /> : <Navigate to="/dashboard" />
-              } 
-            />
-            <Route 
-              path="/dashboard" 
-              element={
-                isLoggedIn ? <Dashboard /> : <Navigate to="/login" />
-              } 
-            />
-            <Route 
-              path="/lessons" 
-              element={
-                isLoggedIn ? <Lessons /> : <Navigate to="/login" />
-              } 
-            />
-            <Route 
-              path="/chat" 
-              element={
-                isLoggedIn ? <Chat /> : <Navigate to="/login" />
-              } 
-            />
-            <Route path="/" element={<Navigate to="/dashboard" />} />
-          </Routes>
-        </div>
+      <div className="h-screen flex flex-col bg-[#1e1e1e]">
+        {isLoggedIn && (
+          <div className="flex-1 flex overflow-hidden">
+            <Sidebar user={user} onLogout={handleLogout} />
+            <div className="flex-1 flex flex-col overflow-hidden">
+              <TabBar />
+              <div className="flex-1 overflow-hidden">
+                <Routes>
+                  <Route 
+                    path="/login" 
+                    element={
+                      !isLoggedIn ? <Login onLogin={handleLogin} /> : <Navigate to="/dashboard" />
+                    } 
+                  />
+                  <Route 
+                    path="/dashboard" 
+                    element={
+                      isLoggedIn ? <Dashboard /> : <Navigate to="/login" />
+                    } 
+                  />
+                  <Route 
+                    path="/lessons" 
+                    element={
+                      isLoggedIn ? <Lessons /> : <Navigate to="/login" />
+                    } 
+                  />
+                  <Route 
+                    path="/chat" 
+                    element={
+                      isLoggedIn ? <Chat /> : <Navigate to="/login" />
+                    } 
+                  />
+                  <Route path="/" element={<Navigate to="/dashboard" />} />
+                </Routes>
+              </div>
+            </div>
+          </div>
+        )}
+        {!isLoggedIn && (
+          <div className="flex-1 overflow-hidden">
+            <Routes>
+              <Route 
+                path="/login" 
+                element={
+                  !isLoggedIn ? <Login onLogin={handleLogin} /> : <Navigate to="/dashboard" />
+                } 
+              />
+              <Route path="/" element={<Navigate to="/login" />} />
+            </Routes>
+          </div>
+        )}
+        <StatusBar />
       </div>
     </BrowserRouter>
   )
