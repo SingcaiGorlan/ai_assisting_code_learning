@@ -4,19 +4,8 @@ server:
   mode: "debug"
 
 database:
-  driver: "postgres"
-  host: "localhost"
-  port: 5432
-  username: "postgres"
-  password: "postgres"
-  database: "ai_learning"
-  ssl_mode: "disable"
-
-redis:
-  host: "localhost"
-  port: 6379
-  password: ""
-  db: 0
+  driver: "sqlite"
+  path: "./data/ai_learning.db"
 
 ai:
   provider: "openai"

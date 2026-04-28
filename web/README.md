@@ -97,3 +97,41 @@ const API_BASE = 'http://localhost:8080/api/v1';
 - Make sure the backend server is running before accessing the web interface
 - Some features may require authentication (to be implemented)
 - AI responses depend on configured API keys in `configs/config.yaml`
+
+# Web 前端应用
+
+本项目包含两个部分：
+
+1. **Wails 桌面应用** (`wails-app/`) - 主要的产品形态
+2. **文档站点** (`docs/`) - VitePress 构建的文档
+
+## 📁 目录结构
+
+```
+web/
+├── wails-app/        # Wails 桌面应用（React + TypeScript）
+│   ├── frontend/     # React 前端代码
+│   ├── main.go       # Go 入口
+│   └── app.go        # Go 应用逻辑
+└── docs/             # VitePress 文档站点
+    ├── guide/        # 指南文档
+    └── index.md      # 文档首页
+```
+
+## 🚀 快速开始
+
+### 启动桌面应用
+
+```bash
+cd wails-app
+wails dev
+```
+
+### 查看文档
+
+```bash
+cd docs
+npm run dev
+```
+
+详细说明请查看各子目录的 README 文件。

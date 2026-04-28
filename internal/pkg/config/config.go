@@ -15,7 +15,6 @@ var (
 type Config struct {
 	Server   ServerConfig   `mapstructure:"server"`
 	Database DatabaseConfig `mapstructure:"database"`
-	Redis    RedisConfig    `mapstructure:"redis"`
 	AI       AIConfig       `mapstructure:"ai"`
 	JWT      JWTConfig      `mapstructure:"jwt"`
 	Log      LogConfig      `mapstructure:"log"`
@@ -28,28 +27,16 @@ type ServerConfig struct {
 }
 
 type DatabaseConfig struct {
-	Driver   string `mapstructure:"driver"`
-	Host     string `mapstructure:"host"`
-	Port     int    `mapstructure:"port"`
-	Username string `mapstructure:"username"`
-	Password string `mapstructure:"password"`
-	Database string `mapstructure:"database"`
-	SSLMode  string `mapstructure:"ssl_mode"`
-}
-
-type RedisConfig struct {
-	Host     string `mapstructure:"host"`
-	Port     int    `mapstructure:"port"`
-	Password string `mapstructure:"password"`
-	DB       int    `mapstructure:"db"`
+	Driver string `mapstructure:"driver"`
+	Path   string `mapstructure:"path"` // SQLite数据库文件路径
 }
 
 type AIConfig struct {
-	Provider     string `mapstructure:"provider"` // openai, azure, local
-	APIKey       string `mapstructure:"api_key"`
-	Model        string `mapstructure:"model"`
-	BaseURL      string `mapstructure:"base_url"`
-	MaxTokens    int    `mapstructure:"max_tokens"`
+	Provider     string  `mapstructure:"provider"` // openai, azure, local
+	APIKey       string  `mapstructure:"api_key"`
+	Model        string  `mapstructure:"model"`
+	BaseURL      string  `mapstructure:"base_url"`
+	MaxTokens    int     `mapstructure:"max_tokens"`
 	Temperature  float64 `mapstructure:"temperature"`
 }
 
@@ -73,14 +60,8 @@ func Load(configPath ...string) *Config {
 		viper.SetDefault("server.port", 8080)
 		viper.SetDefault("server.mode", "debug")
 
-		viper.SetDefault("database.driver", "postgres")
-		viper.SetDefault("database.host", "localhost")
-		viper.SetDefault("database.port", 5432)
-		viper.SetDefault("database.ssl_mode", "disable")
-
-		viper.SetDefault("redis.host", "localhost")
-		viper.SetDefault("redis.port", 6379)
-		viper.SetDefault("redis.db", 0)
+		viper.SetDefault("database.driver", "sqlite")
+		viper.SetDefault("database.path", "./data/ai_learning.db")
 
 		viper.SetDefault("ai.provider", "openai")
 		viper.SetDefault("ai.model", "gpt-3.5-turbo")
@@ -105,31 +86,24 @@ func Load(configPath ...string) *Config {
 
 		// Read environment variables
 		viper.AutomaticEnv()
-		viper.SetEnvPrefix("ALP")
 
 		// Bind environment variables
-		bindEnv()
+		_ = viper.BindEnv("server.port", "ALP_SERVER_PORT")
+		_ = viper.BindEnv("server.mode", "ALP_SERVER_MODE")
+		_ = viper.BindEnv("database.path", "ALP_DB_PATH")
+		_ = viper.BindEnv("ai.api_key", "OPENAI_API_KEY")
+		_ = viper.BindEnv("jwt.secret", "ALP_JWT_SECRET")
 
+		// Try to read configuration file
 		if err := viper.ReadInConfig(); err != nil {
-			fmt.Printf("Failed to read config file: %v\n", err)
+			fmt.Printf("Warning: Failed to read config file: %v\n", err)
 		}
 
+		// Unmarshal configuration
 		if err := viper.Unmarshal(cfg); err != nil {
-			panic(fmt.Sprintf("Failed to parse config: %v", err))
+			panic(fmt.Errorf("failed to unmarshal config: %w", err))
 		}
 	})
 
 	return cfg
-}
-
-func bindEnv() {
-	// Bind environment variables to config keys
-	// These bindings allow overriding config with environment variables
-	_ = viper.BindEnv("server.host", "ALP_SERVER_HOST")
-	_ = viper.BindEnv("server.port", "ALP_SERVER_PORT")
-	_ = viper.BindEnv("database.host", "ALP_DB_HOST")
-	_ = viper.BindEnv("database.username", "ALP_DB_USER")
-	_ = viper.BindEnv("database.password", "ALP_DB_PASSWORD")
-	_ = viper.BindEnv("ai.api_key", "ALP_AI_API_KEY")
-	_ = viper.BindEnv("jwt.secret", "ALP_JWT_SECRET")
 }

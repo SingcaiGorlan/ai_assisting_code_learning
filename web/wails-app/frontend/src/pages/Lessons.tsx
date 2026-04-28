@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react'
-import { BookOpen, PlayCircle, CheckCircle } from 'lucide-react'
+import { Card, Typography, Progress, Button, Row, Col, Spin, Empty } from 'antd'
+import { BookOutlined, PlayCircleOutlined, CheckCircleOutlined } from '@ant-design/icons'
+
+const { Title, Text } = Typography
 
 export default function Lessons() {
   const [lessons, setLessons] = useState<any[]>([])
@@ -23,62 +26,113 @@ export default function Lessons() {
   if (loading) {
     return (
       <div className="flex-1 flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500 mx-auto"></div>
-          <p className="mt-4 text-gray-600">加载中...</p>
-        </div>
+        <Spin size="large" tip="加载中..." />
       </div>
     )
   }
 
   return (
-    <div className="flex-1 overflow-y-auto p-8 bg-gray-50">
-      <div className="max-w-6xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">我的课程</h1>
-          <p className="text-gray-600">选择要学习的课程</p>
+    <div className="flex-1 overflow-y-auto p-6 bg-gray-50">
+      <div className="max-w-7xl mx-auto">
+        <div className="mb-6">
+          <Title level={2} style={{ marginBottom: '8px', color: '#1f2937' }}>
+            我的课程
+          </Title>
+          <Text type="secondary">选择要学习的课程</Text>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {lessons.map((lesson) => (
-            <div key={lesson.id} className="bg-white rounded-xl shadow-md hover:shadow-lg transition-all cursor-pointer group">
-              <div className="p-6">
-                <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg mb-4 group-hover:scale-110 transition-transform">
-                  <BookOpen className="w-6 h-6 text-white" />
-                </div>
-                
-                <h3 className="text-lg font-bold text-gray-800 mb-2">{lesson.title}</h3>
-                <p className="text-sm text-gray-600 mb-4">{lesson.description}</p>
-                
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600">学习进度</span>
-                    <span className="font-semibold text-purple-600">{lesson.progress}%</span>
-                  </div>
-                  
-                  <div className="w-full bg-gray-200 rounded-full h-2">
+        {lessons.length === 0 ? (
+          <Empty 
+            description="暂无课程"
+            style={{ marginTop: '48px' }}
+          />
+        ) : (
+          <Row gutter={[24, 24]}>
+            {lessons.map((lesson) => (
+              <Col xs={24} sm={12} lg={8} key={lesson.id}>
+                <Card
+                  hoverable
+                  style={{ 
+                    borderRadius: '12px',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                    cursor: 'pointer'
+                  }}
+                >
+                  <div style={{ textAlign: 'center', marginBottom: '16px' }}>
                     <div 
-                      className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full transition-all"
-                      style={{ width: `${lesson.progress}%` }}
-                    />
+                      style={{ 
+                        width: '48px', 
+                        height: '48px', 
+                        background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+                        borderRadius: '8px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        margin: '0 auto 16px'
+                      }}
+                    >
+                      <BookOutlined style={{ color: 'white', fontSize: '24px' }} />
+                    </div>
+                    
+                    <Title level={4} style={{ margin: '0 0 8px', color: '#1f2937' }}>
+                      {lesson.title}
+                    </Title>
+                    <Text type="secondary" style={{ fontSize: '14px' }}>
+                      {lesson.description}
+                    </Text>
                   </div>
-                  
-                  <div className="flex items-center justify-between text-xs text-gray-500 mt-2">
-                    <span>已完成 {lesson.completed} / {lesson.total} 节</span>
-                    {lesson.progress > 0 && (
-                      <CheckCircle className="w-4 h-4 text-green-500" />
-                    )}
-                  </div>
-                </div>
 
-                <button className="w-full mt-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white py-2 rounded-lg font-medium hover:from-blue-600 hover:to-purple-600 transition-all flex items-center justify-center gap-2">
-                  <PlayCircle className="w-4 h-4" />
-                  {lesson.progress > 0 ? '继续学习' : '开始学习'}
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
+                  <div style={{ marginBottom: '16px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                      <Text type="secondary" style={{ fontSize: '12px' }}>
+                        学习进度
+                      </Text>
+                      <Text strong style={{ color: '#8b5cf6', fontSize: '14px' }}>
+                        {lesson.progress}%
+                      </Text>
+                    </div>
+                    
+                    <Progress 
+                      percent={lesson.progress} 
+                      showInfo={false}
+                      strokeColor={{ 
+                        '0%': '#3b82f6',
+                        '100%': '#8b5cf6'
+                      }}
+                    />
+                    
+                    <div style={{ 
+                      display: 'flex', 
+                      justifyContent: 'space-between', 
+                      alignItems: 'center',
+                      marginTop: '8px',
+                      fontSize: '12px',
+                      color: '#8c8c8c'
+                    }}>
+                      <span>已完成 {lesson.completed} / {lesson.total} 节</span>
+                      {lesson.progress > 0 && (
+                        <CheckCircleOutlined style={{ color: '#52c41a' }} />
+                      )}
+                    </div>
+                  </div>
+
+                  <Button
+                    type="primary"
+                    block
+                    icon={<PlayCircleOutlined />}
+                    style={{ 
+                      background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+                      border: 'none',
+                      height: '40px'
+                    }}
+                  >
+                    {lesson.progress > 0 ? '继续学习' : '开始学习'}
+                  </Button>
+                </Card>
+              </Col>
+            ))}
+          </Row>
+        )}
       </div>
     </div>
   )

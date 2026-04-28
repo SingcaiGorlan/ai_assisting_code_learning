@@ -7,7 +7,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func RegisterRoutes(router *gin.Engine, db *gorm.DB, redisClient any, cfg *config.Config) {
+func RegisterRoutes(router *gin.Engine, db *gorm.DB, cfg *config.Config) {
 	// Legacy static assets (optional)
 	router.Static("/static", "./web/public")
 	// Docs (VitePress build output)

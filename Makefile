@@ -1,4 +1,4 @@
-.PHONY: help setup dev build test clean lint docker-up docker-down migrate swag clean-all cli
+.PHONY: help setup dev build test clean lint migrate swag cli
 
 # Default target
 help:
@@ -9,9 +9,6 @@ help:
 	@echo "  make test       Run tests"
 	@echo "  make lint       Code linting"
 	@echo "  make clean      Clean build files"
-	@echo "  make clean-all  Deep clean (including node_modules)"
-	@echo "  make docker-up  Start Docker services"
-	@echo "  make docker-down Stop Docker services"
 	@echo "  make migrate    Run database migration"
 	@echo "  make swag       Generate API documentation"
 	@echo "  make cli        Build CLI tool"
@@ -27,8 +24,8 @@ setup:
 	go install github.com/swaggo/swag/cmd/swag@latest
 	@echo "Creating configuration files..."
 	cp .env.example .env.local
-	cp configs/config.yaml configs/config.local.yaml || echo "Configuration file already exists"
-	@echo "✅ Initialization complete! Please edit .env.local and config.local.yaml"
+	mkdir -p data
+	@echo "✅ Initialization complete! Please edit .env.local"
 
 # Development server
 dev:
@@ -39,8 +36,8 @@ dev:
 build:
 	@echo "Building backend..."
 	go build -o bin/server ./cmd/server
-	@echo "Building frontend..."
-	cd web && npm run build
+	@echo "Building Wails desktop app..."
+	cd web/wails-app && wails build || echo "Wails build skipped, run 'wails build' manually"
 
 # Run tests
 test:
@@ -55,25 +52,9 @@ lint:
 # Clean
 clean:
 	@echo "🧹 Cleaning build files..."
-	@bash scripts/clean.sh
-
-# Deep clean (including node_modules)
-clean-all: clean
-	@echo "Deep cleaning (this will remove node_modules)..."
-	find web -name 'node_modules' -type d -prune -exec rm -rf {} + || true
-	rm -rf web/*/dist web/*/build
-	rm -rf web/docs/.vitepress/dist web/docs/.vitepress/cache
-	@echo "✅ Deep clean complete"
-
-# Start Docker services
-docker-up:
-	@echo "Starting Podman services..."
-	podman compose -f docker-compose.dev.yml up -d
-
-# Stop Podman services
-docker-down:
-	@echo "Stopping Podman services..."
-	podman compose -f docker-compose.dev.yml down
+	rm -rf bin/
+	rm -rf web/wails-app/build/
+	@echo "✅ Clean complete"
 
 # Database migration
 migrate:

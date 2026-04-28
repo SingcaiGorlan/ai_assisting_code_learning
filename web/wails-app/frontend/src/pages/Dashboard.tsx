@@ -1,11 +1,14 @@
-import { BookOpen, MessageSquare, TrendingUp, Clock } from 'lucide-react'
+import { Card, Statistic, Row, Col, Progress, Typography } from 'antd'
+import { BookOutlined, MessageOutlined, RiseOutlined, ClockCircleOutlined } from '@ant-design/icons'
+
+const { Title, Text } = Typography
 
 export default function Dashboard() {
   const stats = [
-    { icon: BookOpen, label: '学习课程', value: '3', color: 'from-blue-500 to-blue-600' },
-    { icon: Clock, label: '学习时长', value: '24h', color: 'from-green-500 to-green-600' },
-    { icon: TrendingUp, label: '完成进度', value: '45%', color: 'from-purple-500 to-purple-600' },
-    { icon: MessageSquare, label: 'AI 对话', value: '128', color: 'from-pink-500 to-pink-600' },
+    { icon: <BookOutlined />, label: '学习课程', value: '3', color: '#3b82f6' },
+    { icon: <ClockCircleOutlined />, label: '学习时长', value: '24h', color: '#10b981' },
+    { icon: <RiseOutlined />, label: '完成进度', value: '45%', color: '#8b5cf6' },
+    { icon: <MessageOutlined />, label: 'AI 对话', value: '128', color: '#ec4899' },
   ]
 
   const recentLessons = [
@@ -15,64 +18,142 @@ export default function Dashboard() {
   ]
 
   return (
-    <div className="flex-1 overflow-y-auto p-8 bg-gray-50">
-      <div className="max-w-6xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">欢迎回来！</h1>
-          <p className="text-gray-600">继续你的学习之旅</p>
+    <div className="flex-1 overflow-y-auto p-6 bg-gray-50">
+      <div className="max-w-7xl mx-auto">
+        <div className="mb-6">
+          <Title level={2} style={{ marginBottom: '8px', color: '#1f2937' }}>
+            欢迎回来！
+          </Title>
+          <Text type="secondary">继续你的学习之旅</Text>
         </div>
 
         {/* 统计卡片 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <Row gutter={[24, 24]} className="mb-6">
           {stats.map((stat, index) => (
-            <div key={index} className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow p-6">
-              <div className={`inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r ${stat.color} rounded-lg mb-4`}>
-                <stat.icon className="w-6 h-6 text-white" />
-              </div>
-              <div className="text-2xl font-bold text-gray-800 mb-1">{stat.value}</div>
-              <div className="text-sm text-gray-600">{stat.label}</div>
-            </div>
+            <Col xs={24} sm={12} lg={6} key={index}>
+              <Card 
+                hoverable 
+                style={{ 
+                  borderRadius: '12px',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                  transition: 'all 0.3s'
+                }}
+              >
+                <Statistic
+                  prefix={stat.icon}
+                  value={stat.value}
+                  title={stat.label}
+                  valueStyle={{ 
+                    color: stat.color,
+                    fontSize: '24px',
+                    fontWeight: 'bold'
+                  }}
+                  style={{ textAlign: 'center' }}
+                />
+              </Card>
+            </Col>
           ))}
-        </div>
+        </Row>
 
         {/* 最近学习 */}
-        <div className="bg-white rounded-xl shadow-md p-6">
-          <h2 className="text-xl font-bold text-gray-800 mb-4">最近学习</h2>
+        <Card 
+          title="最近学习" 
+          style={{ 
+            borderRadius: '12px',
+            marginBottom: '24px',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+          }}
+          styles={{
+            header: { 
+              borderBottom: '1px solid #f0f0f0',
+              padding: '16px 24px'
+            }
+          }}
+        >
           <div className="space-y-4">
             {recentLessons.map((lesson) => (
-              <div key={lesson.id} className="border border-gray-200 rounded-lg p-4 hover:border-purple-500 transition-colors cursor-pointer">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="font-semibold text-gray-800">{lesson.title}</h3>
-                  <span className="text-sm text-gray-500">{lesson.lastStudied}</span>
+              <div 
+                key={lesson.id} 
+                className="p-4 border border-gray-200 rounded-lg hover:border-purple-500 transition-colors cursor-pointer"
+                style={{ backgroundColor: '#fafafa' }}
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <Title level={5} style={{ margin: 0, color: '#1f2937' }}>
+                    {lesson.title}
+                  </Title>
+                  <Text type="secondary" style={{ fontSize: '12px' }}>
+                    {lesson.lastStudied}
+                  </Text>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div 
-                    className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full transition-all"
-                    style={{ width: `${lesson.progress}%` }}
-                  />
-                </div>
-                <div className="mt-2 text-sm text-gray-600">
+                <Progress 
+                  percent={lesson.progress} 
+                  showInfo={false}
+                  strokeColor={{ 
+                    '0%': '#3b82f6',
+                    '100%': '#8b5cf6'
+                  }}
+                  style={{ marginBottom: '8px' }}
+                />
+                <Text type="secondary" style={{ fontSize: '12px' }}>
                   进度: {lesson.progress}%
-                </div>
+                </Text>
               </div>
             ))}
           </div>
-        </div>
+        </Card>
 
         {/* 快捷操作 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-          <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-md p-6 text-white cursor-pointer hover:shadow-lg transition-shadow">
-            <BookOpen className="w-8 h-8 mb-4" />
-            <h3 className="text-xl font-bold mb-2">继续学习</h3>
-            <p className="text-blue-100">从上次离开的地方继续</p>
-          </div>
+        <Row gutter={[24, 24]}>
+          <Col xs={24} md={12}>
+            <Card 
+              hoverable
+              style={{ 
+                background: 'linear-gradient(to bottom right, #3b82f6, #2563eb)',
+                borderRadius: '12px',
+                color: 'white',
+                cursor: 'pointer',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+              }}
+            >
+              <div className="flex items-center">
+                <BookOutlined style={{ fontSize: '32px', marginRight: '16px' }} />
+                <div>
+                  <Title level={4} style={{ color: 'white', margin: 0, marginBottom: '4px' }}>
+                    继续学习
+                  </Title>
+                  <Text style={{ color: 'rgba(255,255,255,0.8)' }}>
+                    从上次离开的地方继续
+                  </Text>
+                </div>
+              </div>
+            </Card>
+          </Col>
 
-          <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl shadow-md p-6 text-white cursor-pointer hover:shadow-lg transition-shadow">
-            <MessageSquare className="w-8 h-8 mb-4" />
-            <h3 className="text-xl font-bold mb-2">AI 助手</h3>
-            <p className="text-purple-100">获取智能学习建议</p>
-          </div>
-        </div>
+          <Col xs={24} md={12}>
+            <Card 
+              hoverable
+              style={{ 
+                background: 'linear-gradient(to bottom right, #8b5cf6, #7c3aed)',
+                borderRadius: '12px',
+                color: 'white',
+                cursor: 'pointer',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+              }}
+            >
+              <div className="flex items-center">
+                <MessageOutlined style={{ fontSize: '32px', marginRight: '16px' }} />
+                <div>
+                  <Title level={4} style={{ color: 'white', margin: 0, marginBottom: '4px' }}>
+                    AI 助手
+                  </Title>
+                  <Text style={{ color: 'rgba(255,255,255,0.8)' }}>
+                    获取智能学习建议
+                  </Text>
+                </div>
+              </div>
+            </Card>
+          </Col>
+        </Row>
       </div>
     </div>
   )

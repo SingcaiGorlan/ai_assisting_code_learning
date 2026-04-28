@@ -1,5 +1,10 @@
-import { Home, BookOpen, MessageSquare, LogOut, User } from 'lucide-react'
+import { HomeOutlined, BookOutlined, MessageOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons'
+import { Menu, Layout, Avatar, Dropdown, Space, Typography } from 'antd'
 import { Link, useLocation } from 'react-router-dom'
+import type { MenuProps } from 'antd'
+
+const { Header } = Layout
+const { Text } = Typography
 
 interface NavbarProps {
   user: any
@@ -9,61 +14,91 @@ interface NavbarProps {
 export default function Navbar({ user, onLogout }: NavbarProps) {
   const location = useLocation()
 
-  const navItems = [
-    { path: '/dashboard', icon: Home, label: '首页' },
-    { path: '/lessons', icon: BookOpen, label: '课程' },
-    { path: '/chat', icon: MessageSquare, label: 'AI 助手' },
+  const navItems: MenuProps['items'] = [
+    { 
+      key: '/dashboard', 
+      icon: <HomeOutlined />, 
+      label: <Link to="/dashboard">首页</Link>,
+      className: location.pathname === '/dashboard' ? 'ant-menu-item-selected' : ''
+    },
+    { 
+      key: '/lessons', 
+      icon: <BookOutlined />, 
+      label: <Link to="/lessons">课程</Link>,
+      className: location.pathname === '/lessons' ? 'ant-menu-item-selected' : ''
+    },
+    { 
+      key: '/chat', 
+      icon: <MessageOutlined />, 
+      label: <Link to="/chat">AI 助手</Link>,
+      className: location.pathname === '/chat' ? 'ant-menu-item-selected' : ''
+    },
+  ]
+
+  const userMenuItems: MenuProps['items'] = [
+    {
+      key: 'logout',
+      icon: <LogoutOutlined />,
+      label: '退出登录',
+      onClick: onLogout
+    }
   ]
 
   return (
-    <nav className="bg-white shadow-md border-b border-gray-200">
-      <div className="px-6 py-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-8">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">AI</span>
-              </div>
-              <h1 className="text-xl font-bold text-gray-800">代码学习平台</h1>
-            </div>
-
-            <div className="flex gap-2">
-              {navItems.map((item) => {
-                const isActive = location.pathname === item.path
-                return (
-                  <Link
-                    key={item.path}
-                    to={item.path}
-                    className={`px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-2 ${
-                      isActive
-                        ? 'bg-purple-500 text-white'
-                        : 'text-gray-600 hover:bg-gray-100'
-                    }`}
-                  >
-                    <item.icon className="w-4 h-4" />
-                    {item.label}
-                  </Link>
-                )
-              })}
-            </div>
+    <Header 
+      style={{ 
+        background: '#fff', 
+        padding: '0 24px',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+        height: '64px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between'
+      }}
+    >
+      <div style={{ display: 'flex', alignItems: 'center', gap: '32px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div style={{ 
+            width: '40px', 
+            height: '40px', 
+            background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+            borderRadius: '8px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
+            <Text style={{ color: 'white', fontWeight: 'bold', fontSize: '16px' }}>AI</Text>
           </div>
-
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-3 px-4 py-2 bg-gray-100 rounded-lg">
-              <User className="w-5 h-5 text-gray-600" />
-              <span className="text-sm font-medium text-gray-700">{user?.username || '用户'}</span>
-            </div>
-            
-            <button
-              onClick={onLogout}
-              className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-all flex items-center gap-2"
-            >
-              <LogOut className="w-4 h-4" />
-              退出
-            </button>
-          </div>
+          <Text style={{ fontSize: '18px', fontWeight: 'bold', color: '#1f2937' }}>
+            AI 辅助代码学习平台
+          </Text>
         </div>
+
+        <Menu
+          mode="horizontal"
+          items={navItems}
+          style={{ 
+            border: 'none',
+            background: 'transparent'
+          }}
+          selectedKeys={[location.pathname]}
+        />
       </div>
-    </nav>
+
+      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+        <Dropdown menu={{ items: userMenuItems }} placement="bottomRight">
+          <Space style={{ cursor: 'pointer' }}>
+            <Avatar 
+              size="large" 
+              icon={<UserOutlined />} 
+              style={{ backgroundColor: '#3b82f6' }}
+            />
+            <Text style={{ fontSize: '14px', fontWeight: 500 }}>
+              {user?.username || '用户'}
+            </Text>
+          </Space>
+        </Dropdown>
+      </div>
+    </Header>
   )
 }

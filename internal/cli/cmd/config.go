@@ -24,13 +24,8 @@ var configGetCmd = &cobra.Command{
 		fmt.Printf("  Mode: %s\n", cfg.Server.Mode)
 		
 		fmt.Printf("\nDatabase:\n")
-		fmt.Printf("  Host: %s:%d\n", cfg.Database.Host, cfg.Database.Port)
-		fmt.Printf("  Name: %s\n", cfg.Database.Database)
-		fmt.Printf("  SSL Mode: %s\n", cfg.Database.SSLMode)
-		
-		fmt.Printf("\nRedis:\n")
-		fmt.Printf("  Address: %s:%d\n", cfg.Redis.Host, cfg.Redis.Port)
-		fmt.Printf("  DB: %d\n", cfg.Redis.DB)
+		fmt.Printf("  Driver: %s\n", cfg.Database.Driver)
+		fmt.Printf("  Path: %s\n", cfg.Database.Path)
 		
 		fmt.Printf("\nAI Settings:\n")
 		fmt.Printf("  Provider: %s\n", cfg.AI.Provider)

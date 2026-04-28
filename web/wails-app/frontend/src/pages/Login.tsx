@@ -1,43 +1,47 @@
 import { useState } from 'react'
-import { LogIn, User, Mail, Lock, Loader2 } from 'lucide-react'
+import { Button, Form, Input, Card, Typography, Alert, Divider } from 'antd'
+import { UserOutlined, MailOutlined, LockOutlined, LoadingOutlined } from '@ant-design/icons'
+import type { FormProps } from 'antd'
 
 interface LoginProps {
   onLogin: (user: any) => void
 }
 
+type FieldType = {
+  username?: string
+  email?: string
+  password?: string
+}
+
 export default function Login({ onLogin }: LoginProps) {
   const [isRegister, setIsRegister] = useState(false)
-  const [formData, setFormData] = useState({
-    username: '',
-    email: '',
-    password: ''
-  })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [form] = Form.useForm<FieldType>()
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
     setLoading(true)
     setError('')
 
     try {
       if (isRegister) {
         const result = await window.go.main.App.Register(
-          formData.username,
-          formData.email,
-          formData.password
+          values.username!,
+          values.email!,
+          values.password!
         )
         
         if (result.success) {
           setIsRegister(false)
           setError('注册成功！请登录')
+          form.resetFields()
         } else {
           setError(result.message || '注册失败')
         }
       } else {
         const result = await window.go.main.App.Login(
-          formData.username,
-          formData.password
+          values.username!,
+          values.password!
         )
         
         if (result.success) {
@@ -54,114 +58,131 @@ export default function Login({ onLogin }: LoginProps) {
     }
   }
 
+  const toggleMode = () => {
+    setIsRegister(!isRegister)
+    setError('')
+    form.resetFields()
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500">
-      <div className="w-full max-w-md p-8 mx-4">
-        <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8">
-          <div className="text-center mb-8">
+      <div className="w-full max-w-md p-4 mx-4">
+        <Card 
+          className="shadow-2xl"
+          styles={{
+            body: {
+              padding: '32px',
+              borderRadius: '16px',
+              background: 'rgba(255, 255, 255, 0.95)',
+              backdropFilter: 'blur(10px)'
+            }
+          }}
+        >
+          <div className="text-center mb-6">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full mb-4">
-              <LogIn className="w-8 h-8 text-white" />
+              <UserOutlined className="text-white text-xl" />
             </div>
-            <h1 className="text-3xl font-bold text-gray-800 mb-2">
+            <Typography.Title level={2} style={{ marginBottom: '8px', color: '#1f2937' }}>
               AI 辅助代码学习
-            </h1>
-            <p className="text-gray-600">
+            </Typography.Title>
+            <Typography.Text type="secondary">
               {isRegister ? '创建新账号' : '欢迎回来'}
-            </p>
+            </Typography.Text>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                用户名
-              </label>
-              <div className="relative">
-                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <input
-                  type="text"
-                  value={formData.username}
-                  onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
-                  placeholder="请输入用户名"
-                  required
-                />
-              </div>
-            </div>
+          <Form
+            form={form}
+            name="login-form"
+            onFinish={onFinish}
+            layout="vertical"
+            requiredMark={false}
+          >
+            <Form.Item<FieldType>
+              name="username"
+              rules={[{ required: true, message: '请输入用户名!' }]}
+            >
+              <Input 
+                prefix={<UserOutlined className="site-form-item-icon" />}
+                placeholder="请输入用户名"
+                size="large"
+              />
+            </Form.Item>
 
             {isRegister && (
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  邮箱
-                </label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                  <input
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
-                    placeholder="请输入邮箱"
-                    required
-                  />
-                </div>
-              </div>
+              <Form.Item<FieldType>
+                name="email"
+                rules={[
+                  { required: true, message: '请输入邮箱!' },
+                  { type: 'email', message: '请输入有效的邮箱地址!' }
+                ]}
+              >
+                <Input 
+                  prefix={<MailOutlined className="site-form-item-icon" />}
+                  placeholder="请输入邮箱"
+                  size="large"
+                />
+              </Form.Item>
             )}
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                密码
-              </label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <input
-                  type="password"
-                  value={formData.password}
-                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
-                  placeholder="请输入密码"
-                  required
-                  minLength={6}
-                />
-              </div>
-            </div>
+            <Form.Item<FieldType>
+              name="password"
+              rules={[
+                { required: true, message: '请输入密码!' },
+                { min: 6, message: '密码至少需要6个字符!' }
+              ]}
+            >
+              <Input.Password 
+                prefix={<LockOutlined className="site-form-item-icon" />}
+                placeholder="请输入密码"
+                size="large"
+              />
+            </Form.Item>
 
             {error && (
-              <div className={`p-3 rounded-lg ${error.includes('成功') ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-                {error}
-              </div>
+              <Alert
+                message={error}
+                type={error.includes('成功') ? 'success' : 'error'}
+                showIcon
+                closable
+                onClose={() => setError('')}
+                style={{ marginBottom: '16px' }}
+              />
             )}
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white py-3 rounded-lg font-medium hover:from-blue-600 hover:to-purple-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-            >
-              {loading ? (
-                <>
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                  处理中...
-                </>
-              ) : (
-                <>
-                  {isRegister ? '注册' : '登录'}
-                </>
-              )}
-            </button>
-          </form>
+            <Form.Item>
+              <Button
+                type="primary"
+                htmlType="submit"
+                loading={loading}
+                size="large"
+                block
+                style={{ 
+                  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+                  border: 'none',
+                  height: '48px'
+                }}
+              >
+                {loading ? <LoadingOutlined /> : isRegister ? '注册' : '登录'}
+              </Button>
+            </Form.Item>
+          </Form>
 
-          <div className="mt-6 text-center">
-            <button
-              onClick={() => {
-                setIsRegister(!isRegister)
-                setError('')
-                setFormData({ username: '', email: '', password: '' })
+          <Divider />
+
+          <div className="text-center">
+            <Button 
+              type="link" 
+              onClick={toggleMode}
+              style={{ 
+                color: '#8b5cf6',
+                fontWeight: 500,
+                fontSize: '14px'
               }}
-              className="text-purple-600 hover:text-purple-700 font-medium"
             >
               {isRegister ? '已有账号？立即登录' : '没有账号？立即注册'}
-            </button>
+            </Button>
           </div>
-        </div>
+        </Card>
       </div>
     </div>
   )
