@@ -9,8 +9,8 @@ permissions:
   contents: write
 
 jobs:
-  release:
-    runs-on: ubuntu-latest
+  build-windows:
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
 
@@ -19,33 +19,75 @@ jobs:
         with:
           go-version: '1.21'
 
-      - name: Get dependencies
-        run: go mod download
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
 
-      - name: Build
-        run: |
-          mkdir -p dist
-          # Linux
-          GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o dist/app-linux-amd64 .
-          # Windows
-          GOOS=windows GOARCH=amd64 go build -ldflags="-s -w" -o dist/app-windows-amd64.exe .
-          # macOS
-          GOOS=darwin GOARCH=amd64 go build -ldflags="-s -w" -o dist/app-darwin-amd64 .
+      - name: Install Wails CLI
+        run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
 
-      - name: Create ZIP archives
+      - name: Build Windows
         run: |
-          cd dist
-          zip app-linux-amd64.zip app-linux-amd64
-          zip app-windows-amd64.zip app-windows-amd64.exe
-          zip app-darwin-amd64.zip app-darwin-amd64
+          cd web/wails-app
+          wails build -platform windows/amd64 -ldflags="-s -w"
 
-      - name: Create SHA256 checksums
+      - name: Package Windows
         run: |
-          cd dist
-          sha256sum * > checksums.txt
+          cd web/wails-app/build/windows/amd64
+          Compress-Archive -Path "AI辅助代码学习平台.exe" -DestinationPath "../../../AI-Learning-Platform-Windows.zip"
+
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: windows-build
+          path: web/wails-app/AI-Learning-Platform-Windows.zip
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install Wails CLI
+        run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
+
+      - name: Build macOS Universal
+        run: |
+          cd web/wails-app
+          wails build -platform darwin/universal -ldflags="-s -w"
+
+      - name: Package macOS
+        run: |
+          cd web/wails-app/build/darwin/universal
+          zip -r ../../../../AI-Learning-Platform-macOS.zip "AI辅助代码学习平台.app"
+
+      - name: Upload macOS artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: macos-build
+          path: AI-Learning-Platform-macOS.zip
+
+  create-release:
+    needs: [build-windows, build-macos]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v3
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          files: dist/*
+          files: |
+            windows-build/*.zip
+            macos-build/*.zip
           generate_release_notes: true
