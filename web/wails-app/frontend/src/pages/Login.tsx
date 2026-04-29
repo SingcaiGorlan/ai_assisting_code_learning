@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { Button, Form, Input, Card, Typography, Alert, Divider } from 'antd'
 import { UserOutlined, MailOutlined, LockOutlined, LoadingOutlined } from '@ant-design/icons'
 import type { FormProps } from 'antd'
+import { Button, Form, Input, Alert, Divider } from 'antd'
 
 interface LoginProps {
   onLogin: (user: any) => void
@@ -65,124 +65,133 @@ export default function Login({ onLogin }: LoginProps) {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500">
+    <div className="min-h-screen flex items-center justify-center bg-[#1e1e1e]">
       <div className="w-full max-w-md p-4 mx-4">
-        <Card 
-          className="shadow-2xl"
-          styles={{
-            body: {
-              padding: '32px',
-              borderRadius: '16px',
-              background: 'rgba(255, 255, 255, 0.95)',
-              backdropFilter: 'blur(10px)'
-            }
-          }}
-        >
-          <div className="text-center mb-6">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full mb-4">
-              <UserOutlined className="text-white text-xl" />
+        {/* VS Code 风格卡片 */}
+        <div className="bg-[#252526] border border-[#3c3c3c] rounded-md shadow-xl">
+          {/* 标题区域 */}
+          <div className="px-8 pt-8 pb-6 text-center">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-[#007acc] rounded-md mb-4">
+              <UserOutlined className="text-white text-2xl" />
             </div>
-            <Typography.Title level={2} style={{ marginBottom: '8px', color: '#1f2937' }}>
+            <h1 className="text-[26px] font-semibold text-white mb-2">
               AI 辅助代码学习
-            </Typography.Title>
-            <Typography.Text type="secondary">
+            </h1>
+            <p className="text-[13px] text-gray-400">
               {isRegister ? '创建新账号' : '欢迎回来'}
-            </Typography.Text>
+            </p>
           </div>
 
-          <Form
-            form={form}
-            name="login-form"
-            onFinish={onFinish}
-            layout="vertical"
-            requiredMark={false}
-          >
-            <Form.Item<FieldType>
-              name="username"
-              rules={[{ required: true, message: '请输入用户名!' }]}
-            >
-              <Input 
-                prefix={<UserOutlined className="site-form-item-icon" />}
-                placeholder="请输入用户名"
-                size="large"
-              />
-            </Form.Item>
+          <Divider style={{ borderColor: '#3c3c3c', margin: '0' }} />
 
-            {isRegister && (
+          {/* 表单区域 */}
+          <div className="px-8 py-6">
+            <Form
+              form={form}
+              name="login-form"
+              onFinish={onFinish}
+              layout="vertical"
+              requiredMark={false}
+            >
               <Form.Item<FieldType>
-                name="email"
-                rules={[
-                  { required: true, message: '请输入邮箱!' },
-                  { type: 'email', message: '请输入有效的邮箱地址!' }
-                ]}
+                name="username"
+                rules={[{ required: true, message: '请输入用户名!' }]}
               >
                 <Input 
-                  prefix={<MailOutlined className="site-form-item-icon" />}
-                  placeholder="请输入邮箱"
+                  prefix={<UserOutlined className="text-gray-400" />}
+                  placeholder="请输入用户名"
                   size="large"
+                  className="bg-[#3c3c3c] border-[#555555] text-white placeholder:text-gray-500 hover:border-[#007acc] focus:border-[#007acc] focus:shadow-[0_0_0_2px_rgba(0,122,204,0.2)]"
+                  styles={{
+                    input: {
+                      color: '#ffffff',
+                      backgroundColor: 'transparent'
+                    }
+                  }}
                 />
               </Form.Item>
-            )}
 
-            <Form.Item<FieldType>
-              name="password"
-              rules={[
-                { required: true, message: '请输入密码!' },
-                { min: 6, message: '密码至少需要6个字符!' }
-              ]}
-            >
-              <Input.Password 
-                prefix={<LockOutlined className="site-form-item-icon" />}
-                placeholder="请输入密码"
-                size="large"
-              />
-            </Form.Item>
+              {isRegister && (
+                <Form.Item<FieldType>
+                  name="email"
+                  rules={[
+                    { required: true, message: '请输入邮箱!' },
+                    { type: 'email', message: '请输入有效的邮箱地址!' }
+                  ]}
+                >
+                  <Input 
+                    prefix={<MailOutlined className="text-gray-400" />}
+                    placeholder="请输入邮箱"
+                    size="large"
+                    className="bg-[#3c3c3c] border-[#555555] text-white placeholder:text-gray-500 hover:border-[#007acc] focus:border-[#007acc] focus:shadow-[0_0_0_2px_rgba(0,122,204,0.2)]"
+                    styles={{
+                      input: {
+                        color: '#ffffff',
+                        backgroundColor: 'transparent'
+                      }
+                    }}
+                  />
+                </Form.Item>
+              )}
 
-            {error && (
-              <Alert
-                message={error}
-                type={error.includes('成功') ? 'success' : 'error'}
-                showIcon
-                closable
-                onClose={() => setError('')}
-                style={{ marginBottom: '16px' }}
-              />
-            )}
-
-            <Form.Item>
-              <Button
-                type="primary"
-                htmlType="submit"
-                loading={loading}
-                size="large"
-                block
-                style={{ 
-                  background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
-                  border: 'none',
-                  height: '48px'
-                }}
+              <Form.Item<FieldType>
+                name="password"
+                rules={[
+                  { required: true, message: '请输入密码!' },
+                  { min: 6, message: '密码至少需要6个字符!' }
+                ]}
               >
-                {loading ? <LoadingOutlined /> : isRegister ? '注册' : '登录'}
-              </Button>
-            </Form.Item>
-          </Form>
+                <Input.Password 
+                  prefix={<LockOutlined className="text-gray-400" />}
+                  placeholder="请输入密码"
+                  size="large"
+                  className="bg-[#3c3c3c] border-[#555555] text-white placeholder:text-gray-500 hover:border-[#007acc] focus:border-[#007acc] focus:shadow-[0_0_0_2px_rgba(0,122,204,0.2)]"
+                  styles={{
+                    input: {
+                      color: '#ffffff',
+                      backgroundColor: 'transparent'
+                    }
+                  }}
+                />
+              </Form.Item>
 
-          <Divider />
+              {error && (
+                <Alert
+                  message={error}
+                  type={error.includes('成功') ? 'success' : 'error'}
+                  showIcon
+                  closable
+                  onClose={() => setError('')}
+                  style={{ marginBottom: '16px', backgroundColor: '#252526', border: '#3c3c3c' }}
+                />
+              )}
 
-          <div className="text-center">
-            <Button 
-              type="link" 
-              onClick={toggleMode}
-              style={{ 
-                color: '#8b5cf6',
-                fontWeight: 500,
-                fontSize: '14px'
-              }}
-            >
-              {isRegister ? '已有账号？立即登录' : '没有账号？立即注册'}
-            </Button>
+              <Form.Item>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  loading={loading}
+                  size="large"
+                  block
+                  className="h-[40px] bg-[#007acc] hover:bg-[#1177bb] border-none text-white font-medium rounded-sm"
+                >
+                  {loading ? <LoadingOutlined /> : isRegister ? '注册' : '登录'}
+                </Button>
+              </Form.Item>
+            </Form>
+
+            <Divider style={{ borderColor: '#3c3c3c' }} />
+
+            <div className="text-center">
+              <button 
+                onClick={toggleMode}
+                className="text-[#007acc] hover:underline text-[13px] bg-transparent border-none cursor-pointer"
+              >
+                {isRegister ? '已有账号？立即登录' : '没有账号？立即注册'}
+              </button>
+            </div>
           </div>
-        </Card>
+        </div>
       </div>
     </div>
   )

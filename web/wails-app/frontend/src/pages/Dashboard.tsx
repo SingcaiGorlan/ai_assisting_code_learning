@@ -2,10 +2,10 @@ import { Book, Clock, TrendingUp, MessageCircle } from 'lucide-react'
 
 export default function Dashboard() {
   const stats = [
-    { icon: <Book size={20} />, label: '学习课程', value: '3', color: '#3b82f6' },
-    { icon: <Clock size={20} />, label: '学习时长', value: '24h', color: '#10b981' },
-    { icon: <TrendingUp size={20} />, label: '完成进度', value: '45%', color: '#8b5cf6' },
-    { icon: <MessageCircle size={20} />, label: 'AI 对话', value: '128', color: '#ec4899' },
+    { icon: <Book size={20} />, label: '学习课程', value: '3', color: '#007acc' },
+    { icon: <Clock size={20} />, label: '学习时长', value: '24h', color: '#4ec9b0' },
+    { icon: <TrendingUp size={20} />, label: '完成进度', value: '45%', color: '#ce9178' },
+    { icon: <MessageCircle size={20} />, label: 'AI 对话', value: '128', color: '#dcdcaa' },
   ]
 
   const recentLessons = [
@@ -15,7 +15,7 @@ export default function Dashboard() {
   ]
 
   return (
-    <div className="h-full bg-[#1e1e1e] overflow-y-auto">
+    <div className="h-full bg-[#1e1e1e] overflow-y-auto custom-scrollbar">
       {/* 面包屑导航 */}
       <div className="flex items-center gap-2 px-6 py-3 border-b border-[#252526] bg-[#252526]">
         <span className="text-[13px] text-gray-400">工作台</span>
@@ -40,11 +40,11 @@ export default function Dashboard() {
           {stats.map((stat, index) => (
             <div
               key={index}
-              className="bg-[#252526] border border-[#3c3c3c] rounded-md p-4 hover:border-[#007acc] transition-colors cursor-pointer"
+              className="bg-[#252526] border border-[#3c3c3c] rounded-md p-4 hover:border-[#007acc] transition-all duration-200 cursor-pointer group"
             >
               <div className="flex items-center gap-3 mb-3">
-                <div className="text-gray-400">{stat.icon}</div>
-                <span className="text-[13px] text-gray-400">{stat.label}</span>
+                <div className="text-gray-400 group-hover:text-white transition-colors">{stat.icon}</div>
+                <span className="text-[13px] text-gray-400 group-hover:text-white transition-colors">{stat.label}</span>
               </div>
               <div className="text-[28px] font-semibold" style={{ color: stat.color }}>
                 {stat.value}
@@ -57,7 +57,7 @@ export default function Dashboard() {
         <div className="mb-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-[16px] font-semibold text-white">最近学习</h2>
-            <button className="text-[13px] text-[#007acc] hover:underline">
+            <button className="text-[13px] text-[#007acc] hover:underline bg-transparent border-none cursor-pointer">
               查看全部
             </button>
           </div>
@@ -66,10 +66,10 @@ export default function Dashboard() {
             {recentLessons.map((lesson) => (
               <div
                 key={lesson.id}
-                className="bg-[#252526] border border-[#3c3c3c] rounded-md p-4 hover:border-[#007acc] transition-all cursor-pointer"
+                className="bg-[#252526] border border-[#3c3c3c] rounded-md p-4 hover:border-[#007acc] transition-all duration-200 cursor-pointer group"
               >
                 <div className="flex items-center justify-between mb-3">
-                  <div className="text-[14px] text-white font-medium">
+                  <div className="text-[14px] text-white font-medium group-hover:text-[#007acc] transition-colors">
                     {lesson.title}
                   </div>
                   <div className="text-[12px] text-gray-400">
@@ -77,10 +77,10 @@ export default function Dashboard() {
                   </div>
                 </div>
                 
-                {/* 进度条 */}
-                <div className="w-full bg-[#3c3c3c] rounded-full h-[6px] mb-2">
+                {/* 进度条 - VS Code 风格 */}
+                <div className="w-full bg-[#3c3c3c] rounded-full h-[6px] mb-2 overflow-hidden">
                   <div
-                    className="h-[6px] rounded-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all"
+                    className="h-[6px] rounded-full bg-[#007acc] transition-all duration-300"
                     style={{ width: `${lesson.progress}%` }}
                   />
                 </div>
@@ -95,9 +95,9 @@ export default function Dashboard() {
 
         {/* 快捷操作 */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="bg-[#252526] border border-[#3c3c3c] rounded-md p-6 hover:border-[#007acc] transition-all cursor-pointer group">
+          <div className="bg-[#252526] border border-[#3c3c3c] rounded-md p-6 hover:border-[#007acc] transition-all duration-200 cursor-pointer group">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-blue-500/20 rounded-md flex items-center justify-center text-blue-400 group-hover:bg-blue-500/30 transition-colors">
+              <div className="w-12 h-12 bg-[#007acc]/20 rounded-md flex items-center justify-center text-[#007acc] group-hover:bg-[#007acc]/30 transition-colors">
                 <Book size={24} />
               </div>
               <div>
@@ -111,9 +111,9 @@ export default function Dashboard() {
             </div>
           </div>
 
-          <div className="bg-[#252526] border border-[#3c3c3c] rounded-md p-6 hover:border-[#007acc] transition-all cursor-pointer group">
+          <div className="bg-[#252526] border border-[#3c3c3c] rounded-md p-6 hover:border-[#007acc] transition-all duration-200 cursor-pointer group">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-purple-500/20 rounded-md flex items-center justify-center text-purple-400 group-hover:bg-purple-500/30 transition-colors">
+              <div className="w-12 h-12 bg-[#dcdcaa]/20 rounded-md flex items-center justify-center text-[#dcdcaa] group-hover:bg-[#dcdcaa]/30 transition-colors">
                 <MessageCircle size={24} />
               </div>
               <div>

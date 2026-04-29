@@ -12,20 +12,22 @@ export default function TabBar() {
   const navigate = useNavigate()
 
   const tabs: Tab[] = [
+    { path: '/welcome', label: '欢迎' },
     { path: '/dashboard', label: '仪表板' },
     { path: '/lessons', label: '课程学习' },
     { path: '/chat', label: 'AI 助手' },
+    { path: '/settings', label: '设置' },
   ]
 
   return (
-    <div className="flex items-center bg-[#2d2d2d] border-b border-[#1e1e1e] h-[35px] px-2">
+    <div className="flex items-center bg-[#2d2d2d] border-b border-[#1e1e1e] h-[35px] px-2 overflow-x-auto custom-scrollbar">
       {tabs.map((tab) => {
         const isActive = location.pathname === tab.path
         return (
           <button
             key={tab.path}
             onClick={() => navigate(tab.path)}
-            className={`flex items-center gap-2 px-3 py-1 text-[13px] border-r border-[#1e1e1e] transition-colors ${
+            className={`flex items-center gap-2 px-3 py-1 text-[13px] border-r border-[#1e1e1e] transition-colors whitespace-nowrap ${
               isActive
                 ? 'bg-[#1e1e1e] text-white'
                 : 'bg-[#2d2d2d] text-gray-400 hover:bg-[#2a2d2e]'

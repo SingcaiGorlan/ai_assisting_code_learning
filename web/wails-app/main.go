@@ -2,6 +2,7 @@ package main
 
 import (
 	"embed"
+	"log"
 
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
@@ -28,9 +29,13 @@ func main() {
 		Bind: []interface{}{
 			app,
 		},
+		// 启用开发者工具
+		Debug: options.Debug{
+			OpenInspectorOnStartup: true, // 启动时自动打开检查器
+		},
 	})
 
 	if err != nil {
-		println("Error:", err.Error())
+		log.Fatal("Error:", err.Error())
 	}
 }
