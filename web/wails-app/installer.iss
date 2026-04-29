@@ -36,7 +36,7 @@ DefaultGroupName={#MyAppName}
 ; 输出设置
 OutputDir=installer-output
 OutputBaseFilename=AI-Learning-Platform-Setup-{#MyAppVersion}
-SetupIconFile=build\appicon.ico
+; SetupIconFile=build\appicon.ico  ; 暂时注释，需要时取消注释
 UninstallDisplayIcon={app}\{#MyAppExeName}
 
 ; 压缩设置
@@ -56,11 +56,8 @@ DisableProgramGroupPage=yes
 DisableFinishedPage=no
 ShowLanguageDialog=no
 
-; 语言
-Languages: chinesesimplified
-
 [Languages]
-Name: "chinesesimplified"; MessagesFile: "compiler:Languages\ChineseSimplified.isl"
+Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Tasks]
 ; 桌面快捷方式
@@ -82,7 +79,7 @@ Source: "build\bin\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
 ; 开始菜单程序组
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
-Name: "{group}\查看文档"; Filename: "{app}\docs\README.md"; Flags: nowait skipifsilent skipifdoesntexist
+; Name: "{group}\View Documentation"; Filename: "{app}\docs\README.md"; Flags: nowait skipifsilent skipifdoesntexist
 ; 桌面快捷方式
 Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 ; 快速启动
