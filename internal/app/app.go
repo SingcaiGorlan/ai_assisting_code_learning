@@ -94,3 +94,19 @@ func initDatabase(cfg config.DatabaseConfig) (*gorm.DB, error) {
 	logger.Info("SQLite database connection successful", zap.String("path", cfg.Path))
 	return db, nil
 }
+
+func (a *App) RegisterRoutes(router *gin.RouterGroup) {
+    // 注册API路由
+    router.POST("/api/v1/login", a.Login)
+    router.POST("/api/v1/register", a.Register)
+    router.GET("/api/v1/lessons", a.GetLessons)
+    router.POST("/api/v1/chat", a.ChatWithAI)
+    // ... 其他路由
+}
+
+// 添加Go方法到Wails绑定
+func (a *App) Init() error {
+    // 注册Wails方法
+    wails.Register(a, "main")
+    return nil
+}

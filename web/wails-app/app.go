@@ -69,32 +69,56 @@ func (a *App) Register(username, email, password string) map[string]interface{} 
 
 // GetLessons returns the list of lessons
 func (a *App) GetLessons() []map[string]interface{} {
-	// TODO: 从后端 API 获取课程列表
 	return []map[string]interface{}{
 		{
 			"id":          1,
 			"title":       "Go 语言基础",
 			"description": "学习 Go 语言的基本语法和特性",
+			"level":       "beginner",
 			"progress":    75,
-			"total":       20,
-			"completed":   15,
 		},
 		{
 			"id":          2,
 			"title":       "Web 开发实战",
 			"description": "使用 Gin 框架构建 RESTful API",
+			"level":       "intermediate",
 			"progress":    40,
-			"total":       15,
-			"completed":   6,
 		},
 		{
 			"id":          3,
 			"title":       "数据库设计",
 			"description": "PostgreSQL 数据库设计与优化",
+			"level":       "advanced",
 			"progress":    0,
-			"total":       10,
-			"completed":   0,
 		},
+	}
+}
+
+// GetLessonDetail returns lesson detail by ID
+func (a *App) GetLessonDetail(id int) map[string]interface{} {
+	lessons := a.GetLessons()
+	for _, lesson := range lessons {
+		if lessonID, ok := lesson["id"].(int); ok && lessonID == id {
+			return map[string]interface{}{
+				"id":          lesson["id"],
+				"title":       lesson["title"],
+				"description": lesson["description"],
+				"level":       lesson["level"],
+				"progress":    lesson["progress"],
+				"content":     "这是课程详细内容...",
+				"exercises":   []string{"练习 1", "练习 2", "练习 3"},
+			}
+		}
+	}
+	return map[string]interface{}{"error": "Lesson not found"}
+}
+
+// CompleteLesson marks a lesson as completed
+func (a *App) CompleteLesson(id int) map[string]interface{} {
+	return map[string]interface{}{
+		"success":   true,
+		"message":   "课程已完成",
+		"lesson_id": id,
 	}
 }
 

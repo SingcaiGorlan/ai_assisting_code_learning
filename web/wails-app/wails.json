@@ -1,15 +1,11 @@
 {
-  "name": "AI辅助代码学习平台",
-  "description": "基于 AI 驱动的代码学习平台桌面应用",
-  "author": {
-    "name": "AI Learning Platform Team"
+  "name": "AI 辅助代码学习平台",
+  "description": "基于Wails的AI辅助代码学习平台",
+  "version": "0.1.0",
+  "build": {
+    "target": "desktop"
   },
-  "version": "1.0.0",
-  "frontend:install": "npm install",
-  "frontend:build": "npm run build",
-  "frontend:dev:watcher": "npm run dev",
-  "frontend:dev:serverUrl": "auto",
-  "wailsjsDir": "./frontend/src/wailsjs",
-  "outputType": "desktop",
-  "outputFilename": "ai-learning-platform"
+  "frontend": {
+    "path": "frontend"
+  }
 }

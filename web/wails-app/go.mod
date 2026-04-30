@@ -1,14 +1,26 @@
 module github.com/ai-learning-platform/wails-app
 
-go 1.22.0
-
-require github.com/wailsapp/wails/v2 v2.12.0
+go 1.24.0
 
 require (
+	github.com/go-echarts/go-echarts/v2 v2.7.2
+	github.com/google/gopacket v1.1.19
+	github.com/wailsapp/wails/v2 v2.12.0
+	gonum.org/v1/gonum v0.17.0
+	gonum.org/v1/plot v0.17.0
+)
+
+require (
+	codeberg.org/go-fonts/liberation v0.5.0 // indirect
+	codeberg.org/go-latex/latex v0.2.0 // indirect
+	codeberg.org/go-pdf/fpdf v0.11.1 // indirect
 	git.sr.ht/~jackmordaunt/go-toast/v2 v2.0.3 // indirect
+	git.sr.ht/~sbinet/gg v0.7.0 // indirect
+	github.com/ajstarks/svgo v0.0.0-20211024235047-1546f124cd8b // indirect
 	github.com/bep/debounce v1.2.1 // indirect
 	github.com/go-ole/go-ole v1.3.0 // indirect
 	github.com/godbus/dbus/v5 v5.1.0 // indirect
+	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/gorilla/websocket v1.5.3 // indirect
 	github.com/jchv/go-winloader v0.0.0-20210711035445-715c2860da7e // indirect
@@ -30,7 +42,8 @@ require (
 	github.com/wailsapp/go-webview2 v1.0.22 // indirect
 	github.com/wailsapp/mimetype v1.4.1 // indirect
 	golang.org/x/crypto v0.33.0 // indirect
+	golang.org/x/image v0.30.0 // indirect
 	golang.org/x/net v0.35.0 // indirect
 	golang.org/x/sys v0.30.0 // indirect
-	golang.org/x/text v0.22.0 // indirect
+	golang.org/x/text v0.28.0 // indirect
 )

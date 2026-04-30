@@ -1,133 +1,109 @@
-import { Book, Clock, TrendingUp, MessageCircle } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { lessonsAPI } from '@/services/wails-lessons'
+import type { Lesson } from '@/services/wails-lessons'
+import { Card, Heading, Text, Flex, Box, Button, Progress } from '@radix-ui/themes'
 
 export default function Dashboard() {
-  const stats = [
-    { icon: <Book size={20} />, label: '学习课程', value: '3', color: '#007acc' },
-    { icon: <Clock size={20} />, label: '学习时长', value: '24h', color: '#4ec9b0' },
-    { icon: <TrendingUp size={20} />, label: '完成进度', value: '45%', color: '#ce9178' },
-    { icon: <MessageCircle size={20} />, label: 'AI 对话', value: '128', color: '#dcdcaa' },
-  ]
+  const navigate = useNavigate()
+  const [lessons, setLessons] = useState<Lesson[]>([])
+  const [loading, setLoading] = useState(true)
 
-  const recentLessons = [
-    { id: 1, title: 'Go 语言基础', progress: 75, lastStudied: '2小时前' },
-    { id: 2, title: 'Web 开发实战', progress: 40, lastStudied: '昨天' },
-    { id: 3, title: '数据库设计', progress: 0, lastStudied: '未开始' },
-  ]
+  useEffect(() => {
+    loadLessons()
+  }, [])
+
+  const loadLessons = async () => {
+    try {
+      const data = await lessonsAPI.getList()
+      setLessons(data)
+    } catch (error) {
+      console.error('Failed to load lessons:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const getLevelColor = (level: string) => {
+    switch (level) {
+      case 'beginner':
+        return 'green'
+      case 'intermediate':
+        return 'blue'
+      case 'advanced':
+        return 'red'
+      default:
+        return 'gray'
+    }
+  }
+
+  const getLevelText = (level: string) => {
+    switch (level) {
+      case 'beginner':
+        return '初级'
+      case 'intermediate':
+        return '中级'
+      case 'advanced':
+        return '高级'
+      default:
+        return level
+    }
+  }
+
+  if (loading) {
+    return (
+      <Flex align="center" justify="center" style={{ minHeight: '400px' }}>
+        <Text>加载中...</Text>
+      </Flex>
+    )
+  }
 
   return (
-    <div className="h-full bg-[#1e1e1e] overflow-y-auto custom-scrollbar">
-      {/* 面包屑导航 */}
-      <div className="flex items-center gap-2 px-6 py-3 border-b border-[#252526] bg-[#252526]">
-        <span className="text-[13px] text-gray-400">工作台</span>
-        <span className="text-[13px] text-gray-500">/</span>
-        <span className="text-[13px] text-white">仪表板</span>
-      </div>
+    <Box style={{ padding: '24px' }}>
+      <Heading size="8" mb="4">欢迎回来！</Heading>
+      <Text size="4" color="gray" mb="6">继续你的学习之旅</Text>
 
-      {/* 内容区域 */}
-      <div className="p-6">
-        {/* 欢迎标题 */}
-        <div className="mb-6">
-          <h1 className="text-[26px] font-semibold text-white mb-2">
-            欢迎回来！👋
-          </h1>
-          <p className="text-[15px] text-gray-400">
-            继续你的学习之旅，今天想学习些什么？
-          </p>
-        </div>
-
-        {/* 统计卡片 */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          {stats.map((stat, index) => (
-            <div
-              key={index}
-              className="bg-[#252526] border border-[#3c3c3c] rounded-md p-4 hover:border-[#007acc] transition-all duration-200 cursor-pointer group"
-            >
-              <div className="flex items-center gap-3 mb-3">
-                <div className="text-gray-400 group-hover:text-white transition-colors">{stat.icon}</div>
-                <span className="text-[13px] text-gray-400 group-hover:text-white transition-colors">{stat.label}</span>
-              </div>
-              <div className="text-[28px] font-semibold" style={{ color: stat.color }}>
-                {stat.value}
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* 最近学习 */}
-        <div className="mb-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-[16px] font-semibold text-white">最近学习</h2>
-            <button className="text-[13px] text-[#007acc] hover:underline bg-transparent border-none cursor-pointer">
-              查看全部
-            </button>
-          </div>
-          
-          <div className="space-y-2">
-            {recentLessons.map((lesson) => (
-              <div
-                key={lesson.id}
-                className="bg-[#252526] border border-[#3c3c3c] rounded-md p-4 hover:border-[#007acc] transition-all duration-200 cursor-pointer group"
+      <Heading size="6" mb="4">我的课程</Heading>
+      
+      <Flex direction="column" gap="3">
+        {lessons.map((lesson) => (
+          <Card key={lesson.id} size="3">
+            <Flex justify="between" align="start">
+              <Box style={{ flex: 1 }}>
+                <Flex align="center" gap="2" mb="2">
+                  <Heading size="4">{lesson.title}</Heading>
+                  <Text size="2" color={getLevelColor(lesson.level)}>
+                    {getLevelText(lesson.level)}
+                  </Text>
+                </Flex>
+                <Text size="2" color="gray" mb="3">
+                  {lesson.description}
+                </Text>
+                <Flex align="center" gap="2">
+                  <Progress value={lesson.progress || 0} size="2" style={{ flex: 1 }} />
+                  <Text size="2" color="gray">{lesson.progress || 0}%</Text>
+                </Flex>
+              </Box>
+              <Button
+                variant="solid"
+                ml="4"
+                onClick={() => navigate(`/lessons`)}
               >
-                <div className="flex items-center justify-between mb-3">
-                  <div className="text-[14px] text-white font-medium group-hover:text-[#007acc] transition-colors">
-                    {lesson.title}
-                  </div>
-                  <div className="text-[12px] text-gray-400">
-                    {lesson.lastStudied}
-                  </div>
-                </div>
-                
-                {/* 进度条 - VS Code 风格 */}
-                <div className="w-full bg-[#3c3c3c] rounded-full h-[6px] mb-2 overflow-hidden">
-                  <div
-                    className="h-[6px] rounded-full bg-[#007acc] transition-all duration-300"
-                    style={{ width: `${lesson.progress}%` }}
-                  />
-                </div>
-                
-                <div className="text-[12px] text-gray-400">
-                  进度: {lesson.progress}%
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+                继续学习
+              </Button>
+            </Flex>
+          </Card>
+        ))}
+      </Flex>
 
-        {/* 快捷操作 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="bg-[#252526] border border-[#3c3c3c] rounded-md p-6 hover:border-[#007acc] transition-all duration-200 cursor-pointer group">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-[#007acc]/20 rounded-md flex items-center justify-center text-[#007acc] group-hover:bg-[#007acc]/30 transition-colors">
-                <Book size={24} />
-              </div>
-              <div>
-                <h3 className="text-[15px] font-semibold text-white mb-1">
-                  继续学习
-                </h3>
-                <p className="text-[13px] text-gray-400">
-                  从上次离开的地方继续
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-[#252526] border border-[#3c3c3c] rounded-md p-6 hover:border-[#007acc] transition-all duration-200 cursor-pointer group">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-[#dcdcaa]/20 rounded-md flex items-center justify-center text-[#dcdcaa] group-hover:bg-[#dcdcaa]/30 transition-colors">
-                <MessageCircle size={24} />
-              </div>
-              <div>
-                <h3 className="text-[15px] font-semibold text-white mb-1">
-                  AI 助手
-                </h3>
-                <p className="text-[13px] text-gray-400">
-                  获取智能学习建议
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+      <Flex gap="3" mt="6">
+        <Button variant="solid" onClick={() => navigate('/lessons')}>
+          浏览所有课程
+        </Button>
+        <Button variant="soft" onClick={() => navigate('/chat')}>
+          AI 助手
+        </Button>
+      </Flex>
+    </Box>
   )
 }

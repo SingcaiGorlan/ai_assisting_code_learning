@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 辅助代码学习平台 - 导航</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            width: 100%;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+        
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+        
+        .card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .card p {
+            color: #666;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        
+        .badge-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .badge-success {
+            background: #10b981;
+            color: white;
+        }
+        
+        .badge-warning {
+            background: #f59e0b;
+            color: white;
+        }
+        
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 40px;
+            opacity: 0.8;
+        }
+        
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 AI 辅助代码学习平台</h1>
+            <p>桌面端 UI + Radix UI 组件库</p>
+        </div>
+        
+        <div class="grid">
+            <a href="http://localhost:5173/login" class="card">
+                <div class="card-icon">🔐</div>
+                <h2>登录页面</h2>
+                <p>用户认证入口，支持邮箱/密码登录，包含表单验证和路由跳转功能。</p>
+                <span class="badge badge-success">✅ 可用</span>
+            </a>
+            
+            <a href="http://localhost:5173/dashboard" class="card">
+                <div class="card-icon">📊</div>
+                <h2>仪表板</h2>
+                <p>学习进度概览，统计卡片展示，课程列表管理（需要登录）。</p>
+                <span class="badge badge-warning">⚠️ 需后端</span>
+            </a>
+            
+            <a href="http://localhost:5173/lessons" class="card">
+                <div class="card-icon">📚</div>
+                <h2>课程列表</h2>
+                <p>浏览和管理课程，难度标签，进度条显示（需要登录）。</p>
+                <span class="badge badge-warning">⚠️ 需后端</span>
+            </a>
+            
+            <a href="http://localhost:5173/chat" class="card">
+                <div class="card-icon">💬</div>
+                <h2>AI 聊天</h2>
+                <p>智能问答助手，消息历史记录，自动滚动到底部（需要登录）。</p>
+                <span class="badge badge-warning">⚠️ 需后端</span>
+            </a>
+            
+            <a href="http://localhost:5173/demo" class="card">
+                <div class="card-icon">🎨</div>
+                <h2>Radix UI 演示</h2>
+                <p>基础的 Radix UI 组件示例，展示按钮、卡片、输入框等组件。</p>
+                <span class="badge badge-success">✅ 可用</span>
+            </a>
+            
+            <a href="http://localhost:5173/showcase" class="card">
+                <div class="card-icon">✨</div>
+                <h2>Radix UI 完整展示</h2>
+                <p>完整的组件库展示，包括 Button、Badge、Callout、Text 等所有组件及其变体。</p>
+                <span class="badge badge-primary">⭐ 推荐</span>
+            </a>
+        </div>
+        
+        <div class="footer">
+            <p>前端服务器运行在 http://localhost:5173</p>
+            <p style="margin-top: 10px; font-size: 0.9rem;">
+                💡 提示：点击任意卡片即可访问对应页面
+            </p>
+        </div>
+    </div>
+</body>
+</html>

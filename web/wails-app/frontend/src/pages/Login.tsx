@@ -1,198 +1,129 @@
 import { useState } from 'react'
-import { UserOutlined, MailOutlined, LockOutlined, LoadingOutlined } from '@ant-design/icons'
-import type { FormProps } from 'antd'
-import { Button, Form, Input, Alert, Divider } from 'antd'
+import { useNavigate } from 'react-router-dom'
+import { authAPI } from '@/services/wails-auth'
+import { Button, Card, Text, Heading, Flex, Box } from '@radix-ui/themes'
 
-interface LoginProps {
-  onLogin: (user: any) => void
-}
-
-type FieldType = {
-  username?: string
-  email?: string
-  password?: string
-}
-
-export default function Login({ onLogin }: LoginProps) {
-  const [isRegister, setIsRegister] = useState(false)
-  const [loading, setLoading] = useState(false)
+export default function Login() {
+  const navigate = useNavigate()
+  const [isLogin, setIsLogin] = useState(true)
+  const [formData, setFormData] = useState({
+    username: '',
+    email: '',
+    password: '',
+  })
   const [error, setError] = useState('')
-  const [form] = Form.useForm<FieldType>()
+  const [loading, setLoading] = useState(false)
 
-  const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
-    setLoading(true)
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
     setError('')
+    setLoading(true)
 
     try {
-      if (isRegister) {
-        const result = await window.go.main.App.Register(
-          values.username!,
-          values.email!,
-          values.password!
-        )
-        
+      if (isLogin) {
+        // 登录
+        const result = await authAPI.login({
+          email: formData.email,
+          password: formData.password,
+        })
+
         if (result.success) {
-          setIsRegister(false)
-          setError('注册成功！请登录')
-          form.resetFields()
+          localStorage.setItem('token', result.token || '')
+          localStorage.setItem('user', JSON.stringify(result.user))
+          navigate('/dashboard')
         } else {
-          setError(result.message || '注册失败')
+          setError(result.message)
         }
       } else {
-        const result = await window.go.main.App.Login(
-          values.username!,
-          values.password!
-        )
-        
+        // 注册
+        const result = await authAPI.register({
+          username: formData.username,
+          email: formData.email,
+          password: formData.password,
+        })
+
         if (result.success) {
-          localStorage.setItem('token', result.token)
-          onLogin(result.user)
+          setIsLogin(true)
+          setError('注册成功！请登录')
         } else {
-          setError(result.message || '登录失败')
+          setError(result.message)
         }
       }
     } catch (err) {
       setError('操作失败，请重试')
+      console.error(err)
     } finally {
       setLoading(false)
     }
   }
 
-  const toggleMode = () => {
-    setIsRegister(!isRegister)
-    setError('')
-    form.resetFields()
-  }
-
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#1e1e1e]">
-      <div className="w-full max-w-md p-4 mx-4">
-        {/* VS Code 风格卡片 */}
-        <div className="bg-[#252526] border border-[#3c3c3c] rounded-md shadow-xl">
-          {/* 标题区域 */}
-          <div className="px-8 pt-8 pb-6 text-center">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-[#007acc] rounded-md mb-4">
-              <UserOutlined className="text-white text-2xl" />
-            </div>
-            <h1 className="text-[26px] font-semibold text-white mb-2">
-              AI 辅助代码学习
-            </h1>
-            <p className="text-[13px] text-gray-400">
-              {isRegister ? '创建新账号' : '欢迎回来'}
-            </p>
-          </div>
+    <Flex align="center" justify="center" style={{ minHeight: '100vh', background: 'var(--gray-2)' }}>
+      <Card size="3" style={{ width: '400px', maxWidth: '90%' }}>
+        <Flex direction="column" gap="4">
+          <Heading size="6" align="center">
+            {isLogin ? '登录' : '注册'}
+          </Heading>
 
-          <Divider style={{ borderColor: '#3c3c3c', margin: '0' }} />
+          {error && (
+            <Box>
+              <Text color="red" size="2">{error}</Text>
+            </Box>
+          )}
 
-          {/* 表单区域 */}
-          <div className="px-8 py-6">
-            <Form
-              form={form}
-              name="login-form"
-              onFinish={onFinish}
-              layout="vertical"
-              requiredMark={false}
+          <form onSubmit={handleSubmit}>
+            <Flex direction="column" gap="3">
+              {!isLogin && (
+                <input
+                  className="rt-TextFieldInput"
+                  placeholder="用户名"
+                  value={formData.username}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, username: e.target.value })}
+                  required={!isLogin}
+                  style={{ padding: '8px 12px', borderRadius: '6px', border: '1px solid var(--gray-6)', background: 'var(--color-background)' }}
+                />
+              )}
+
+              <input
+                className="rt-TextFieldInput"
+                type="email"
+                placeholder="邮箱"
+                value={formData.email}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, email: e.target.value })}
+                required
+                style={{ padding: '8px 12px', borderRadius: '6px', border: '1px solid var(--gray-6)', background: 'var(--color-background)' }}
+              />
+
+              <input
+                className="rt-TextFieldInput"
+                type="password"
+                placeholder="密码"
+                value={formData.password}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, password: e.target.value })}
+                required
+                style={{ padding: '8px 12px', borderRadius: '6px', border: '1px solid var(--gray-6)', background: 'var(--color-background)' }}
+              />
+
+              <Button type="submit" variant="solid" disabled={loading}>
+                {loading ? '处理中...' : (isLogin ? '登录' : '注册')}
+              </Button>
+            </Flex>
+          </form>
+
+          <Flex justify="center">
+            <Button
+              variant="ghost"
+              onClick={() => {
+                setIsLogin(!isLogin)
+                setError('')
+                setFormData({ username: '', email: '', password: '' })
+              }}
             >
-              <Form.Item<FieldType>
-                name="username"
-                rules={[{ required: true, message: '请输入用户名!' }]}
-              >
-                <Input 
-                  prefix={<UserOutlined className="text-gray-400" />}
-                  placeholder="请输入用户名"
-                  size="large"
-                  className="bg-[#3c3c3c] border-[#555555] text-white placeholder:text-gray-500 hover:border-[#007acc] focus:border-[#007acc] focus:shadow-[0_0_0_2px_rgba(0,122,204,0.2)]"
-                  styles={{
-                    input: {
-                      color: '#ffffff',
-                      backgroundColor: 'transparent'
-                    }
-                  }}
-                />
-              </Form.Item>
-
-              {isRegister && (
-                <Form.Item<FieldType>
-                  name="email"
-                  rules={[
-                    { required: true, message: '请输入邮箱!' },
-                    { type: 'email', message: '请输入有效的邮箱地址!' }
-                  ]}
-                >
-                  <Input 
-                    prefix={<MailOutlined className="text-gray-400" />}
-                    placeholder="请输入邮箱"
-                    size="large"
-                    className="bg-[#3c3c3c] border-[#555555] text-white placeholder:text-gray-500 hover:border-[#007acc] focus:border-[#007acc] focus:shadow-[0_0_0_2px_rgba(0,122,204,0.2)]"
-                    styles={{
-                      input: {
-                        color: '#ffffff',
-                        backgroundColor: 'transparent'
-                      }
-                    }}
-                  />
-                </Form.Item>
-              )}
-
-              <Form.Item<FieldType>
-                name="password"
-                rules={[
-                  { required: true, message: '请输入密码!' },
-                  { min: 6, message: '密码至少需要6个字符!' }
-                ]}
-              >
-                <Input.Password 
-                  prefix={<LockOutlined className="text-gray-400" />}
-                  placeholder="请输入密码"
-                  size="large"
-                  className="bg-[#3c3c3c] border-[#555555] text-white placeholder:text-gray-500 hover:border-[#007acc] focus:border-[#007acc] focus:shadow-[0_0_0_2px_rgba(0,122,204,0.2)]"
-                  styles={{
-                    input: {
-                      color: '#ffffff',
-                      backgroundColor: 'transparent'
-                    }
-                  }}
-                />
-              </Form.Item>
-
-              {error && (
-                <Alert
-                  message={error}
-                  type={error.includes('成功') ? 'success' : 'error'}
-                  showIcon
-                  closable
-                  onClose={() => setError('')}
-                  style={{ marginBottom: '16px', backgroundColor: '#252526', border: '#3c3c3c' }}
-                />
-              )}
-
-              <Form.Item>
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  loading={loading}
-                  size="large"
-                  block
-                  className="h-[40px] bg-[#007acc] hover:bg-[#1177bb] border-none text-white font-medium rounded-sm"
-                >
-                  {loading ? <LoadingOutlined /> : isRegister ? '注册' : '登录'}
-                </Button>
-              </Form.Item>
-            </Form>
-
-            <Divider style={{ borderColor: '#3c3c3c' }} />
-
-            <div className="text-center">
-              <button 
-                onClick={toggleMode}
-                className="text-[#007acc] hover:underline text-[13px] bg-transparent border-none cursor-pointer"
-              >
-                {isRegister ? '已有账号？立即登录' : '没有账号？立即注册'}
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+              {isLogin ? '没有账号？注册' : '已有账号？登录'}
+            </Button>
+          </Flex>
+        </Flex>
+      </Card>
+    </Flex>
   )
 }

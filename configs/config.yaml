@@ -4,8 +4,8 @@ server:
   mode: "debug"
 
 database:
-  driver: "sqlite"
-  path: "./data/ai_learning.db"
+  driver: sqlite
+  dsn: ./data/ai_learning.db
 
 ai:
   provider: "openai"

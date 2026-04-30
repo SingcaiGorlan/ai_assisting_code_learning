@@ -58,12 +58,6 @@ func RegisterRoutes(router *gin.Engine, db *gorm.DB, cfg *config.Config) {
 		{
 			ai.POST("/chat", api.AIChat)
 			ai.POST("/code-assist", api.CodeAssist)
-			
-			// AI configuration management
-			ai.GET("/config", api.GetAIConfig)
-			ai.PUT("/config", api.UpdateAIConfig)
-			ai.POST("/config/test", api.TestAIConnection)
-			ai.GET("/providers", api.GetAIProviders)
 		}
 	}
 }

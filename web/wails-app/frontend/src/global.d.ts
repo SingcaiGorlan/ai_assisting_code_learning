@@ -3,17 +3,16 @@ declare global {
     go: {
       main: {
         App: {
-          GetAppVersion: () => Promise<string>;
-          Login: (username: string, password: string) => Promise<any>;
-          Register: (username: string, email: string, password: string) => Promise<any>;
-          GetLessons: () => Promise<any[]>;
-          ChatWithAI: (message: string) => Promise<any>;
-          CodeAssist: (code: string, question: string) => Promise<any>;
-          OpenExternalLink: (url: string) => Promise<void>;
-        }
-      }
-    }
-  }
+          Login(email: string, password: string): Promise<{ success: boolean; message: string; token?: string; user?: any }>;
+          Register(username: string, email: string, password: string): Promise<{ success: boolean; message: string }>;
+          GetLessons(): Promise<any[]>;
+          GetLessonDetail(id: number): Promise<any>;
+          CompleteLesson(id: number): Promise<any>;
+          ChatWithAI(message: string): Promise<{ success: boolean; reply: string; message: string }>;
+        };
+      };
+    };
+  };
 }
 
 export {};
